@@ -72,7 +72,7 @@ const Artist = () => {
           title: album.title,
           year: album.releaseDate.split('-')[0],
           image: album.imageUrl,
-        })).slice(0, 5); 
+        })).slice(0, 5);
         setAlbums(mappedAlbums);
       } catch (error) {
         console.error('Error fetching albums:', error);
@@ -85,7 +85,7 @@ const Artist = () => {
         const data = await response.json();
         const mappedSingles: Single[] = data.map((single: any) => ({
           title: single.title,
-          year: single.releaseDate.split('-')[0], 
+          year: single.releaseDate.split('-')[0],
           image: single.imageUrl,
         }));
         setSingles(mappedSingles);
@@ -247,7 +247,7 @@ const Artist = () => {
         <div className="flex flex-col justify-center items-center gap-4 p-4 rounded-[10px]">
           <h2 className="text-2xl font-bold mb-4 self-start">Популярні</h2>
           {tracks.map((track, index) => (
-            <div 
+            <div
               key={track.id}
               className={`flex items-center gap-4 p-4 w-[408px] rounded-[10px] ${currentTrack === track.filePath && isPlaying ? 'bg-[rgba(186,214,235,0.65)]' : trackEnded && currentTrack === track.filePath ? 'bg-[rgba(186,214,235,0.20)]' : 'bg-[rgba(186,214,235,0.20)]'}`}
             >
@@ -255,12 +255,21 @@ const Artist = () => {
               <img src={`https://localhost:7179${track.imageUrl}` || '/images/placeholder.png'} alt={track.title} className="w-[50px] h-[50px] rounded-[10px]" />
               <span className="text-white flex-grow">{track.title}</span>
               <button onClick={() => handlePlayPause(track.filePath)}>
-                <img 
-                  src={currentTrack === track.filePath && isPlaying ? '/images/PauseIcon.svg' : trackEnded && currentTrack === track.filePath ? '/images/PlayIcon.svg' : '/images/PlayIcon.svg'} 
+                <img
+                  src={currentTrack === track.filePath && isPlaying ? '/images/PauseIcon.svg' : trackEnded && currentTrack === track.filePath ? '/images/PlayIcon.svg' : '/images/PlayIcon.svg'}
                   alt={isPlaying ? 'Pause' : trackEnded ? 'Stopped' : 'Play'}
-                  className="w-[34px] h-[34px]" 
+                  className="w-[34px] h-[34px]"
                 />
               </button>
+              <button>
+                <img src={'/images/AddCircle.svg'} alt={'Add to playlist'} className="w-[24px] h-[24px]" />
+              </button>
+              <button className="flex items-center gap-0.5">
+                <img src={'/images/Container.svg'} alt={'.'} className="w-[4px] h-[4px]" />
+                <img src={'/images/Container.svg'} alt={'.'} className="w-[4px] h-[4px]" />
+                <img src={'/images/Container.svg'} alt={'.'} className="w-[4px] h-[4px]" />
+              </button>
+
             </div>
           ))}
           <h2 className="text-2xl font-bold mb-4 mt-16 self-start">Концерти</h2>
@@ -277,8 +286,10 @@ const Artist = () => {
                   <div key={concert.id} className="p-4 bg-[rgba(186,214,235,0.20)] rounded-[10px] flex items-center">
                     <div className="flex flex-col items-center mr-4">
                       <span className="text-4xl font-bold">{day}</span>
+                      <div className="w-full border-t-2 border-white my-1"></div>
                       <span className="text-lg">{month}</span>
                     </div>
+
                     <div>
                       <h3 className="text-xl font-semibold">{concert.name}</h3>
                       <p>{dayOfWeek}, {time}</p>
