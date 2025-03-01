@@ -47,7 +47,7 @@ const RegisterStep3 = () => {
         console.log('Registration successful:', data);
         navigate('/main');
       } else {
-        const errorData = await response.json();
+        //const errorData = await response.json();
         navigate('/main');
         //console.error('Registration error:', errorData);
         //alert(`Error: ${errorData.message}`);

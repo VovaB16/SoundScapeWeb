@@ -43,7 +43,7 @@ const Artist = () => {
   const [loading, setLoading] = useState(true);
   const [currentTrack, setCurrentTrack] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [trackEnded, setTrackEnded] = useState(false); // Стейт для відслідковування завершення треку
+  const [trackEnded, setTrackEnded] = useState(false);
   const audioRef = useRef(new Audio());
 
   const API_KEY = import.meta.env.VITE_TICKETMASTER_API_KEY;
