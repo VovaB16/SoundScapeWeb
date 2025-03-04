@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import NavigationMenu from './NavigationMenu';
 
 const Header = () => {
   const [isHomeActive, setIsHomeActive] = useState(false);
   const [isNotificationsActive, setIsNotificationsActive] = useState(false);
+  const navigate = useNavigate();
 
   const handleHomeClick = () => {
     setIsHomeActive(prevState => !prevState);
@@ -11,6 +13,10 @@ const Header = () => {
 
   const handleNotificationsClick = () => {
     setIsNotificationsActive(prevState => !prevState);
+  };
+
+  const handleProfileClick = () => {
+    navigate('/profile');
   };
 
   return (
@@ -49,7 +55,9 @@ const Header = () => {
                   className="h-10"
                 />
               </button>
-              <img src="/images/avatars/frame (1).svg" alt="Avatar" className="h-12 w-12 rounded-full" />
+              <button onClick={handleProfileClick} className="flex items-center justify-center">
+                <img src="/images/avatars/frame (1).svg" alt="Avatar" className="h-12 w-12 rounded-full" />
+              </button>
             </div>
           </div>
         </header>

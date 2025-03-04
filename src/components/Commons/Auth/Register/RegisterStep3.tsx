@@ -15,6 +15,7 @@ const RegisterStep3 = () => {
   const [year, setYear] = useState(registrationData.birthYear || '');
   const [gender, setGender] = useState(registrationData.gender || '');
   const [agree, setAgree] = useState(false);
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   const handleRegisterClick = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +35,7 @@ const RegisterStep3 = () => {
     };
 
     try {
-      const response = await fetch('https://localhost:7179/api/auth/register', {
+      const response = await fetch(`${BASE_URL}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

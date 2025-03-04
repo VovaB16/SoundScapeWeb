@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useAuth } from '../AuthContext';
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -7,14 +8,18 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
-
+    const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+    
     const toggleShowPassword = () => {
         setShowPassword(!showPassword);
     };
 
+    const authContext = useAuth();
+    const login = authContext ? authContext.login : () => {};
+
     const handleLogin = async () => {
         try {
-            const response = await fetch('https://localhost:7179/api/auth/login', {
+            const response = await fetch(`${BASE_URL}/api/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -28,11 +33,17 @@ const Login = () => {
 
             const data = await response.json();
             console.log('Login successful', data);
+
+            localStorage.setItem('authToken', data.token);
+
+            login();
+
             navigate('/main');
         } catch (error) {
             setError((error as Error).message);
         }
     };
+
 
     return (
         <div className="flex h-screen">
@@ -120,7 +131,7 @@ const Login = () => {
                                 onClick={handleLogin}
                             >
                                 <span className="text-[#FFF] font-['Noto Sans'] text-[16px] font-normal leading-normal">
-                                    Далі
+                                    Увійти
                                 </span>
                             </button>
                         </div>

@@ -9,6 +9,8 @@ const CreateNewPassword = () => {
   const [token, setToken] = useState('');
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     const tokenFromUrl = searchParams.get('token');
@@ -31,7 +33,7 @@ const CreateNewPassword = () => {
     }
 
     try {
-      const response = await fetch('https://localhost:7179/api/auth/reset-password', {
+      const response = await fetch(`${BASE_URL}/api/auth/reset-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

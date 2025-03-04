@@ -4,11 +4,12 @@ import { useNavigate } from 'react-router-dom';
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');
     const navigate = useNavigate();
+    const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         try {
-            const response = await fetch('https://localhost:7179/api/auth/request-password-reset', {
+            const response = await fetch(`${BASE_URL}/api/auth/request-password-reset`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
