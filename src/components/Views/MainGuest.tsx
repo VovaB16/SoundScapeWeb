@@ -1,7 +1,46 @@
 import { Link } from 'react-router-dom';
 import './MainGuest.css';
+import { useState } from 'react';
 
 const MainGuest = () => {
+    const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+
+    const toggleQuestion = (index: number): void => {
+        setActiveIndex(activeIndex === index ? null : index);
+    };
+
+    const questions = [
+        {
+            title: 'Як створити плейліст?',
+            answer: `За допомогою плейлістів ви можете легко зберігати улюблену музику й ділитися нею з друзями.
+            
+            Щоб його створити:
+            
+            1. Натисніть пункт "Моя бібліотека".
+            2. Натисніть СТВОРИТИ.
+            3. Назвіть плейліст.
+            4. Почніть додавати пісні (і ми допоможемо вам у цьому).`
+        },
+        {
+            title: 'Як увімкнути економію трафіку?',
+            answer: `1. Натисніть пункт Головна.
+            2. Натисніть Налаштування.
+            3. Натисніть пункт Економія трафіку.
+            4. Увімкніть економію трафіку.`
+        },
+        {
+            title: 'Музику можна слухати тільки у випадковому порядку?',
+            answer: `Якщо плейліст відмічено значком "Перемішати", треки будуть відтворюватись у випадковому порядку. 
+            
+            Якщо значка "Перемішати" немає, пісні в плейлісті можна вибирати.`
+        },
+        {
+            title: 'Де знайти подкасти?',
+            answer: `Торкніться Шукати. У розділі Переглянути все торкніться "Подкасти".`
+        }
+    ];
+
     return (
         <>
             <div className="main-guest-wrapper">
@@ -65,9 +104,71 @@ const MainGuest = () => {
                     </div>
                 </div>
 
+                <div className="full-page-image">
+                    <img src=".\images\guestPage\AMM.png" alt="AMM" className="full-page-image-content" />
+                    <p className="image-text style-1">Музика навколо</p>
+                    <p className="image-text style-2">Ритм веде</p>
+                    <p className="image-text style-3">Дихай музикою</p>
+                    <p className="image-text style-4">Відчуй звук</p>
+                    <p className="image-text style-5">Світ звуків</p>
+                    <p className="image-text style-6">Твій ритм</p>
+                    <p className="image-text style-7">Поринь у звук</p>
+                    <p className="image-text style-8">Ти у ритмі</p>
+                    <p className="image-text style-9">Відчуй ритм</p>
+                    <p className="image-text style-10">Ти в музиці</p>
+                    <p className="image-text style-11">Живи музикою</p>
+                    <p className="image-text style-12">Відчуй емоції</p>
+                    <p className="image-text style-13">Лови ритм</p>
+                    <p className="image-text style-14">Твій стиль</p>
+                    <p className="image-text style-15">Світ емоцій</p>
+                    <p className="image-text style-16">Слухай серцем</p>
+                    <p className="image-text style-17">Ритм усередині</p>
+                    <p className="image-text style-18">Музика живе</p>
+                </div>
+
+                <div className="main-guest-wrapper">
+                    <div className="gradient-square-second">
+                        <p className="question-title">Маєте запитання?</p>
+                        <div className="questions-container">
+                            {questions.map((q, index) => (
+                                <div
+                                    key={index}
+                                    className={`question ${activeIndex === index ? 'active' : ''}`}
+                                    onClick={() => toggleQuestion(index)}
+                                >
+                                    <button className="question-btn">
+                                        {q.title}
+                                        <span className={`arrow ${activeIndex === index ? 'up' : 'down'}`}></span>
+                                    </button>
+                                    {activeIndex === index && (
+                                        <div className="answer">
+                                            <p>{q.answer}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+                <div className="container-end"> 
+    <img src={"images/guestPage/AI.png"} alt="DM" className="guest-page-image-end" />
+
+    <div className="guest-page-content-end">
+        <h1 className="guest-page-title-end">
+            Готовий? вмикати музику!
+        </h1>
+        <Link to="/register-step1">
+            <button className="guest-page-button-end">
+                Зареєструватися безкоштовно
+            </button>
+        </Link>
+    </div>
+</div>
+
             </div>
         </>
     );
 };
 
 export default MainGuest;
+

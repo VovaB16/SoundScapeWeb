@@ -1,11 +1,11 @@
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../Commons/Auth/AuthContext';
 
 interface ProfileProps {
     setLoggedIn: (loggedIn: boolean) => void;
 }
 
-const Profile: React.FC<ProfileProps> = ({ setLoggedIn }) => {
+const Profile: React.FC<ProfileProps> = ({ }) => {
     const navigate = useNavigate();
     const authContext = useAuth();
     const logout = authContext ? authContext.logout : () => {};
