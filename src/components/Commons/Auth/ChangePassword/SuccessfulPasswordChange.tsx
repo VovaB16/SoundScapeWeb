@@ -28,10 +28,9 @@ const SuccessfulPasswordChange = () => {
                 </div>
                 <button
                     onClick={handleButtonClick}
-                    className="text-white font-bold w-full max-w-md mt-100"
+                    className="text-white font-bold w-full max-w-md mt-100 bg-[rgba(163,5,166,0.50)] hover:bg-[rgba(163,5,166,0.7)]"
                     style={{ 
                         borderRadius: '20px', 
-                        background: 'rgba(163, 5, 166, 0.50)', 
                         display: 'flex', 
                         padding: '16px 10px', 
                         justifyContent: 'center', 

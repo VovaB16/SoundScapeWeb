@@ -7,9 +7,10 @@ const CreateNewPassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
   const [token, setToken] = useState('');
+  const [attemptedSubmit, setAttemptedSubmit] = useState(false);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  
+
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
@@ -27,6 +28,7 @@ const CreateNewPassword = () => {
   const toggleShowRepeatPassword = () => setShowRepeatPassword(!showRepeatPassword);
 
   const handleNextClick = async () => {
+    setAttemptedSubmit(true);
     if (password !== repeatPassword) {
       alert('Passwords do not match');
       return;
@@ -52,6 +54,29 @@ const CreateNewPassword = () => {
     }
   };
 
+  const inputBorderClass = () => {
+    if (password === '' && repeatPassword === '') {
+      return 'border-[var(--Gray,#B3B3B3)]';
+    }
+    if (isMinLength && hasLetter && hasNumber && password === repeatPassword) {
+      return 'border-[var(--Text,#FFF)]';
+    }
+    return 'border-[#EC0D0D]';
+  };
+
+  const radioTextClass = (condition: boolean) => {
+    if (attemptedSubmit && !condition) {
+      return 'text-[rgba(236,13,13,1)]';
+    }
+    return condition ? 'text-[rgba(255,255,255,1)]' : 'text-[#B3B3B3]';
+  };
+
+  const radioButtonClass = (condition: boolean) => {
+    if (attemptedSubmit && !condition) {
+      return 'bg-[rgba(236,13,13,1)]';
+    }
+    return condition ? 'bg-[rgba(45,1,64,1)]' : 'bg-transparent border border-[#B3B3B3]';
+  };
   return (
     <div className="flex h-screen">
       <div className="w-1/2 flex flex-col justify-between items-center p-8 bg-cover bg-center" style={{ backgroundImage: "linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), url('/images/SUM.png')", borderRadius: '20px' }}>
@@ -63,18 +88,18 @@ const CreateNewPassword = () => {
       </div>
       <div className="w-1/2 flex flex-col justify-center items-center p-8 text-left">
         <h2 className="text-3xl font-bold mb-[48px]">Створення нового пароля</h2>
-            <p className="mb-6 max-w-md" style={{ color: '#B3B3B3', fontFamily: 'Noto Sans', fontSize: '16px', fontStyle: 'normal', fontWeight: 400, lineHeight: 'normal' }}>
-                        Введіть новий пароль для свого акаунта SoundScape нижче. 
-            </p>
+        <p className="mb-6 max-w-md" style={{ color: '#B3B3B3', fontFamily: 'Noto Sans', fontSize: '16px', fontStyle: 'normal', fontWeight: 400, lineHeight: 'normal' }}>
+          Введіть новий пароль для свого акаунта SoundScape нижче.
+        </p>
         <div className="w-full max-w-md">
           <form className="w-full">
             <div>
               <div className="mb-[32px]">
                 <label className="text-white font-['Noto_Sans'] text-[16px] font-bold leading-normal mb-2 block" htmlFor="password">
-                  Пароль
+                  Новий пароль
                 </label>
                 <div className="relative">
-                  <div className="flex items-center w-[400px] p-[16px_10px] pr-[40px] rounded-[8px] border border-[#B3B3B3] focus-within:ring-2 focus-within:ring-[#A305A6]">
+                  <div className={`flex items-center w-[400px] p-[16px_10px] pr-[40px] rounded-[8px] border ${inputBorderClass()} focus-within:ring-2 focus-within:ring-[#A305A6]`}>
                     <input
                       type={showPassword ? 'text' : 'password'}
                       className="flex-1 text-[#B3B3B3] font-['Noto_Sans'] text-[16px] font-normal leading-normal bg-transparent focus:outline-none"
@@ -99,10 +124,10 @@ const CreateNewPassword = () => {
 
               <div className="mb-[32px]">
                 <label className="text-white font-['Noto_Sans'] text-[16px] font-bold leading-normal mb-2 block" htmlFor="repeat-password">
-                  Повторіть пароль
+                  Підтвердіть новий пароль
                 </label>
                 <div className="relative">
-                  <div className="flex items-center w-[400px] p-[16px_10px] pr-[40px] rounded-[8px] border border-[#B3B3B3] focus-within:ring-2 focus-within:ring-[#A305A6]">
+                  <div className={`flex items-center w-[400px] p-[16px_10px] pr-[40px] rounded-[8px] border ${inputBorderClass()} focus-within:ring-2 focus-within:ring-[#A305A6]`}>
                     <input
                       type={showRepeatPassword ? 'text' : 'password'}
                       className="flex-1 text-[#B3B3B3] font-['Noto_Sans'] text-[16px] font-normal leading-normal bg-transparent focus:outline-none"
@@ -131,16 +156,16 @@ const CreateNewPassword = () => {
               </label>
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2">
-                  <input type="radio" checked={hasLetter} readOnly className="w-5 h-5" />
-                  <span className="text-[#B3B3B3] text-[16px]">1 літеру</span>
+                  <div className={`w-5 h-5 rounded-full ${radioButtonClass(hasLetter)}`}></div>
+                  <span className={`text-[16px] ${radioTextClass(hasLetter)}`}>1 літеру</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <input type="radio" checked={hasNumber} readOnly className="w-5 h-5" />
-                  <span className="text-[#B3B3B3] text-[16px]">1 число</span>
+                  <div className={`w-5 h-5 rounded-full ${radioButtonClass(hasNumber)}`}></div>
+                  <span className={`text-[16px] ${radioTextClass(hasNumber)}`}>1 число</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <input type="radio" checked={isMinLength} readOnly className="w-5 h-5" />
-                  <span className="text-[#B3B3B3] text-[16px]">8 символів</span>
+                  <div className={`w-5 h-5 rounded-full ${radioButtonClass(isMinLength)}`}></div>
+                  <span className={`text-[16px] ${radioTextClass(isMinLength)}`}>8 символів</span>
                 </div>
               </div>
             </div>

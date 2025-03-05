@@ -3,11 +3,20 @@ import { useNavigate } from 'react-router-dom';
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');
+    const [emailError, setEmailError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
     const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+        if (!email) {
+            setEmailError(true);
+            setErrorMessage('Будь ласка, введіть адресу електронної пошти.');
+            return;
+        }
+        setEmailError(false);
+        setErrorMessage('');
         try {
             const response = await fetch(`${BASE_URL}/api/auth/request-password-reset`, {
                 method: 'POST',
@@ -19,11 +28,13 @@ const ForgotPassword = () => {
             if (response.ok) {
                 navigate('/forgot-password/EmailSent');
             } else {
-                alert('Failed to send password reset link.');
+                setEmailError(true);
+                setErrorMessage('Введіть коректну адресу.');
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('An error occurred while sending the password reset link.');
+            setEmailError(true);
+            setErrorMessage('An error occurred while sending the password reset link.');
         }
     };
 
@@ -64,17 +75,21 @@ const ForgotPassword = () => {
                         id="email"
                         type="email" 
                         placeholder="Адреса електронної пошти" 
-                        className="w-full p-3 mb-6 text-white" 
-                        style={{ borderRadius: '8px', border: '1px solid #B3B3B3', background: '#000' }}
+                        className={`w-full p-3 mb-2 text-white ${emailError ? 'border-[#EC0D0D]' : 'border-[#B3B3B3]'}`}
+                        style={{ borderRadius: '8px', border: '1px solid', background: '#000' }}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
+                    {emailError && (
+                        <p className="text-[#EC0D0D] text-[14px] mt-1">
+                            {errorMessage}
+                        </p>
+                    )}
                     <button 
                         type="submit"
-                        className="text-white font-bold w-full max-w-md mt-12" 
+                        className="text-white font-bold w-full max-w-md mt-12 bg-[rgba(163,5,166,0.50)] hover:bg-[rgba(163,5,166,0.7)]" 
                         style={{ 
                             borderRadius: '20px', 
-                            background: 'rgba(163, 5, 166, 0.50)', 
                             display: 'flex', 
                             padding: '16px 10px', 
                             justifyContent: 'center', 

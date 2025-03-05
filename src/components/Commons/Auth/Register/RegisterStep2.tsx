@@ -13,6 +13,7 @@ const RegisterStep2 = () => {
   const [repeatPassword, setRepeatPassword] = useState(registrationData.repeatPassword);
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
+  const [attemptedSubmit, setAttemptedSubmit] = useState(false);
 
   const toggleShowPassword = () => setShowPassword(!showPassword);
   const toggleShowRepeatPassword = () => setShowRepeatPassword(!showRepeatPassword);
@@ -22,10 +23,35 @@ const RegisterStep2 = () => {
   const hasNumber = /\d/.test(password);
 
   const handleNextClick = () => {
+    setAttemptedSubmit(true);
     if (isMinLength && hasLetter && hasNumber && password === repeatPassword) {
       setRegistrationData({ ...registrationData, password, repeatPassword });
       navigate('/register-step3');
     }
+  };
+
+  const inputBorderClass = () => {
+    if (password === '' && repeatPassword === '') {
+      return 'border-[var(--Gray,#B3B3B3)]';
+    }
+    if (isMinLength && hasLetter && hasNumber && password === repeatPassword) {
+      return 'border-[var(--Text,#FFF)]';
+    }
+    return 'border-[#EC0D0D]';
+  };
+
+  const radioTextClass = (condition: boolean) => {
+    if (attemptedSubmit && !condition) {
+      return 'text-[rgba(236,13,13,1)]';
+    }
+    return condition ? 'text-[rgba(255,255,255,1)]' : 'text-[#B3B3B3]';
+  };
+
+  const radioButtonClass = (condition: boolean) => {
+    if (attemptedSubmit && !condition) {
+      return 'bg-[rgba(236,13,13,1)]';
+    }
+    return condition ? 'bg-[rgba(45,1,64,1)]' : 'bg-transparent border border-[#B3B3B3]';
   };
 
   return (
@@ -62,7 +88,7 @@ const RegisterStep2 = () => {
                   Пароль
                 </label>
                 <div className="relative">
-                  <div className="flex items-center w-[400px] p-[16px_10px] pr-[40px] rounded-[8px] border border-[#B3B3B3] focus-within:ring-2 focus-within:ring-[#A305A6]">
+                  <div className={`flex items-center w-[400px] p-[16px_10px] pr-[40px] rounded-[8px] border ${inputBorderClass()} focus-within:ring-2 focus-within:ring-[#A305A6]`}>
                     <input
                       className="flex-1 text-[#B3B3B3] font-['Noto_Sans'] text-[16px] font-normal leading-normal bg-transparent focus:outline-none"
                       id="password"
@@ -90,7 +116,7 @@ const RegisterStep2 = () => {
                   Повторіть пароль
                 </label>
                 <div className="relative">
-                  <div className="flex items-center w-[400px] p-[16px_10px] pr-[40px] rounded-[8px] border border-[#B3B3B3] focus-within:ring-2 focus-within:ring-[#A305A6]">
+                  <div className={`flex items-center w-[400px] p-[16px_10px] pr-[40px] rounded-[8px] border ${inputBorderClass()} focus-within:ring-2 focus-within:ring-[#A305A6]`}>
                     <input
                       className="flex-1 text-[#B3B3B3] font-['Noto_Sans'] text-[16px] font-normal leading-normal bg-transparent focus:outline-none"
                       id="repeat-password"
@@ -119,16 +145,16 @@ const RegisterStep2 = () => {
               </label>
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2">
-                  <input type="radio" checked={hasLetter} readOnly className="w-5 h-5" />
-                  <span className="text-[#B3B3B3] text-[16px]">1 літеру</span>
+                  <div className={`w-5 h-5 rounded-full ${radioButtonClass(hasLetter)}`}></div>
+                  <span className={`text-[16px] ${radioTextClass(hasLetter)}`}>1 літеру</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <input type="radio" checked={hasNumber} readOnly className="w-5 h-5" />
-                  <span className="text-[#B3B3B3] text-[16px]">1 число</span>
+                  <div className={`w-5 h-5 rounded-full ${radioButtonClass(hasNumber)}`}></div>
+                  <span className={`text-[16px] ${radioTextClass(hasNumber)}`}>1 число</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <input type="radio" checked={isMinLength} readOnly className="w-5 h-5" />
-                  <span className="text-[#B3B3B3] text-[16px]">8 символів</span>
+                  <div className={`w-5 h-5 rounded-full ${radioButtonClass(isMinLength)}`}></div>
+                  <span className={`text-[16px] ${radioTextClass(isMinLength)}`}>8 символів</span>
                 </div>
               </div>
             </div>
