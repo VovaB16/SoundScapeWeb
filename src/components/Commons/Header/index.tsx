@@ -45,7 +45,7 @@ const Header = () => {
               </div>
             </div>
             <div className="flex items-center pr-[160px] gap-5">
-              <button className="flex items-center justify-center w-[180px] p-3 gap-[12px] rounded-[22px] bg-gradient-to-b from-[#660273] to-[#A305A6] text-white">
+              <button onClick={() => navigate('/premium')} className="flex items-center justify-center w-[180px] p-3 gap-[12px] rounded-[22px] bg-gradient-to-b from-[#660273] to-[#A305A6] text-white">
                 Premium
               </button>
               <button onClick={handleNotificationsClick}>

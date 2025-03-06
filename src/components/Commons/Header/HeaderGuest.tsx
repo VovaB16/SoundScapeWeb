@@ -19,7 +19,7 @@ const HeaderGuest = () => {
                     </div>
 
                     <div className="flex items-center gap-6">
-                        <button onClick={() => navigate('')} className="text-white text-lg font-light">
+                        <button onClick={() => navigate('/premium')} className="text-white text-lg font-light">
                             Premium
                         </button>
                         <button onClick={() => navigate('')} className="text-white text-lg font-light">

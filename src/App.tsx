@@ -11,13 +11,14 @@ import RegisterStep3 from './components/Commons/Auth/Register/RegisterStep3';
 import { RegistrationProvider } from './components/Commons/Auth/Register/RegistrationContext';
 import Profile from './components/Views/Profile';
 import Main from './components/Views/main';
-import MainGuest from './components/Views/MainGuest';
+import MainGuest from './components/Views/MainGuest/MainGuest';
 import Login from './components/Commons/Auth/Login/Login';
 import ForgotPassword from './components/Commons/Auth/ChangePassword/ForgotPassword';
 import EmailSent from './components/Commons/Auth/ChangePassword/EmailSent';
 import CreateNewPassword from './components/Commons/Auth/ChangePassword/CreateNewPassword';
 import SuccessfulPasswordChange from './components/Commons/Auth/ChangePassword/SuccessfulPasswordChange';
 import Logout from './components/Commons/Auth/Logout';
+import PremiumPage from './components/Views/Premium/PremiumPage';
 
 const AppContent = () => {
   const auth = useAuth();
@@ -72,7 +73,7 @@ const AppContent = () => {
                 <Route path="/main" element={<Navigate to="/main-guest" />} />
               </>
             )}
-
+            <Route path="/premium" element={<PremiumPage />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/forgot-password/EmailSent" element={<EmailSent />} />
             <Route path="/forgot-password/NewPassword" element={<CreateNewPassword />} />
