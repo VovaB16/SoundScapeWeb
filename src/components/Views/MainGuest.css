@@ -412,7 +412,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    background-color: rgba(179, 179, 179, 0.65);
+    background-color: rgba(179, 179, 179, 0.715);
     border-radius: 8px;
     padding: 16px;
 }
@@ -436,7 +436,7 @@
 }
 
 .question.active {
-    background-color: rgb(215, 214, 214);
+    background-color: rgb(200, 200, 200);
 }
 
 .question.active .question-btn {
@@ -448,17 +448,23 @@
     height: 10px;
     border-left: 2px solid #000;
     border-bottom: 2px solid #000;
-    transform: rotate(45deg);
+    
     transition: transform 0.3s ease;
 }
 
-.question.active .arrow {
-    transform: rotate(-135deg); 
+.arrow {
+    display: inline-block;
+    margin-left: 10px;
+    transition: transform 0.3s ease;
 }
 
+.arrow.up {
+    transform: rotate(135deg);
+}
 
-
-
+.arrow.down {
+    transform: rotate(-45deg);
+}
 .container-end {
     position: relative;
     display: flex;

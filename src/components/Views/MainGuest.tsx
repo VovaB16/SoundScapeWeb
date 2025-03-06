@@ -150,20 +150,20 @@ const MainGuest = () => {
                         </div>
                     </div>
                 </div>
-                <div className="container-end"> 
-    <img src={"images/guestPage/AI.png"} alt="DM" className="guest-page-image-end" />
+                <div className="container-end">
+                    <img src={"images/guestPage/AI.png"} alt="DM" className="guest-page-image-end" />
 
-    <div className="guest-page-content-end">
-        <h1 className="guest-page-title-end">
-            Готовий? вмикати музику!
-        </h1>
-        <Link to="/register-step1">
-            <button className="guest-page-button-end">
-                Зареєструватися безкоштовно
-            </button>
-        </Link>
-    </div>
-</div>
+                    <div className="guest-page-content-end">
+                        <h1 className="guest-page-title-end">
+                            Готовий? вмикати музику!
+                        </h1>
+                        <Link to="/register-step1">
+                            <button className="guest-page-button-end">
+                                Зареєструватися безкоштовно
+                            </button>
+                        </Link>
+                    </div>
+                </div>
 
             </div>
         </>

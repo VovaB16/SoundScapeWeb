@@ -56,7 +56,7 @@ const Login = () => {
             </div>
 
             <div className="w-1/2 flex flex-col justify-center items-center p-8">
-                <h2 className="text-3xl font-bold mb-[48px]">Логін</h2>
+                <h2 className="text-3xl font-bold mb-[48px]">Увійти</h2>
                 <div className="w-full max-w-md">
                     <form className="w-full" onSubmit={(e) => e.preventDefault()}>
                         <div className="mb-4">
