@@ -1,11 +1,41 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavigationMenu from './NavigationMenu';
+import { useAuth } from '../Auth/AuthContext';
 
 const Header = () => {
   const [isHomeActive, setIsHomeActive] = useState(false);
   const [isNotificationsActive, setIsNotificationsActive] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string>('/images/avatars/frame (1).svg');
   const navigate = useNavigate();
+  const authContext = useAuth();
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/api/user/me`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authContext?.token}`
+          }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setAvatarUrl(data.avatarUrl || '/images/avatars/frame (1).svg'); 
+        } else {
+          console.error('Failed to fetch user data:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    if (authContext?.token) {
+      fetchUserData();
+    }
+  }, [authContext, BASE_URL]);
 
   const handleHomeClick = () => {
     setIsHomeActive(prevState => !prevState);
@@ -56,7 +86,16 @@ const Header = () => {
                 />
               </button>
               <button onClick={handleProfileClick} className="flex items-center justify-center">
-                <img src="/images/avatars/frame (1).svg" alt="Avatar" className="h-12 w-12 rounded-full" />
+                {avatarUrl && (
+                  <img
+                    src={avatarUrl}
+                    alt="User Avatar"
+                    className="h-13 w-13 rounded-full"
+                    onError={(e) => {
+                      e.currentTarget.src = `${BASE_URL}/images/default-avatar.png`; // Fallback to default avatar if image fails to load
+                    }}
+                  />
+                )}
               </button>
             </div>
           </div>

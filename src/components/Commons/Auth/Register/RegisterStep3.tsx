@@ -82,7 +82,7 @@ const RegisterStep3 = () => {
       </div>
 
       <div className="w-1/2 flex flex-col justify-center items-center p-8">
-        <h2 className="text-3xl font-bold mb-[48px]">Створіть пароль</h2>
+        <h2 className="text-3xl font-bold mb-[48px]">Розкажіть про себе</h2>
         <div className="w-full max-w-md">
           <div className="mb-4">
             <div className="w-[400px] h-[2px] flex-shrink-0 rounded-[10px] bg-[#D9D9D9]">

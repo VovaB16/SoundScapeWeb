@@ -1,0 +1,22 @@
+.profile-container {
+    display: flex;
+    width: 660px;
+    height: 635px;
+    padding: 16px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    background: var(--Gradient-4, linear-gradient(180deg, rgba(45, 1, 64, 0.38) 0%, rgba(23, 1, 39, 0.23) 25%, rgba(0, 1, 13, 0.75) 100%));
+    backdrop-filter: blur(12.5px);
+    margin-left: 300px;
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+

@@ -2,8 +2,9 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface AuthContextType {
   loggedIn: boolean;
-  login: () => void;
+  login: (token: string) => void;
   logout: () => void;
+  token: string | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -18,14 +19,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return storedLoggedIn ? JSON.parse(storedLoggedIn) : false;
   });
 
-  const login = () => {
+  const [token, setToken] = useState<string | null>(() => {
+    return localStorage.getItem('token');
+  });
+
+  const login = (newToken: string) => {
     setLoggedIn(true);
+    setToken(newToken);
     localStorage.setItem('loggedIn', JSON.stringify(true));
+    localStorage.setItem('token', newToken);
+    console.log('Token set during login:', newToken); // Log the token when it is set
   };
 
   const logout = () => {
     setLoggedIn(false);
+    setToken(null);
     localStorage.removeItem('loggedIn');
+    localStorage.removeItem('token');
   };
 
   useEffect(() => {
@@ -33,10 +43,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (storedLoggedIn) {
       setLoggedIn(JSON.parse(storedLoggedIn));
     }
+    const storedToken = localStorage.getItem('token');
+    if (storedToken) {
+      setToken(storedToken);
+      console.log('Token retrieved from localStorage:', storedToken); 
+    }
   }, []);
 
   return (
-    <AuthContext.Provider value={{ loggedIn, login, logout }}>
+    <AuthContext.Provider value={{ loggedIn, login, logout, token }}>
       {children}
     </AuthContext.Provider>
   );
