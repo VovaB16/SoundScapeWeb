@@ -10,7 +10,7 @@ import RegisterStep2 from './components/Commons/Auth/Register/RegisterStep2';
 import RegisterStep3 from './components/Commons/Auth/Register/RegisterStep3';
 import { RegistrationProvider } from './components/Commons/Auth/Register/RegistrationContext';
 import Profile from './components/Views/Profile/Profile';
-import Main from './components/Views/main';
+import Main from './components/Views/MainPage/main';
 import MainGuest from './components/Views/MainGuest/MainGuest';
 import Login from './components/Commons/Auth/Login/Login';
 import ForgotPassword from './components/Commons/Auth/ChangePassword/ForgotPassword';

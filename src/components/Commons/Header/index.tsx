@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'; 
 import { useNavigate } from 'react-router-dom';
 import NavigationMenu from './NavigationMenu';
 import { useAuth } from '../Auth/AuthContext';
@@ -10,6 +10,10 @@ const Header = () => {
   const navigate = useNavigate();
   const authContext = useAuth();
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+  const updateAvatarUrl = (url: string) => {
+    setAvatarUrl(`${BASE_URL}${url}?t=${new Date().getTime()}`);
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -23,7 +27,12 @@ const Header = () => {
         });
         if (response.ok) {
           const data = await response.json();
-          setAvatarUrl(data.avatarUrl || '/images/avatars/frame (1).svg'); 
+          // Якщо є avatarUrl, оновлюємо його з параметром часу
+          if (data.avatarUrl) {
+            updateAvatarUrl(data.avatarUrl);
+          } else {
+            setAvatarUrl('/images/avatars/frame (1).svg');
+          }
         } else {
           console.error('Failed to fetch user data:', response.statusText);
         }
@@ -92,7 +101,7 @@ const Header = () => {
                     alt="User Avatar"
                     className="h-13 w-13 rounded-full"
                     onError={(e) => {
-                      e.currentTarget.src = `${BASE_URL}/images/default-avatar.png`; // Fallback to default avatar if image fails to load
+                      e.currentTarget.src = `${BASE_URL}/images/default-avatar.png`;
                     }}
                   />
                 )}

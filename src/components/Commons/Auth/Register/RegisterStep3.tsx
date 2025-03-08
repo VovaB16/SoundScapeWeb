@@ -22,54 +22,65 @@ const RegisterStep3 = () => {
   const handleRegisterClick = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!agree) {
-      alert('Ви повинні погодитися з умовами');
-      return;
+        alert('Ви повинні погодитися з умовами');
+        return;
     }
 
     const dayInt = parseInt(day.toString());
+    const monthInt = parseInt(month.toString());
     const yearInt = parseInt(year.toString());
 
     const isDayValid = dayInt >= 1 && dayInt <= 31;
+    const isMonthValid = monthInt >= 1 && monthInt <= 12;
     const isYearValid = yearInt >= 1900 && yearInt <= 2025;
 
     setDayValid(isDayValid);
     setYearValid(isYearValid);
 
-    if (!isDayValid || !isYearValid) {
-      return;
+    if (!isDayValid || !isMonthValid || !isYearValid) {
+        return;
     }
 
     const userData = {
-      Username: name,
-      Email: registrationData.email,
-      Password: registrationData.password,
-      BirthDay: dayInt,
-      BirthMonth: parseInt(month.toString()),
-      BirthYear: yearInt,
-      Gender: gender,
+        Username: name,
+        Email: registrationData.email,
+        Password: registrationData.password,
+        BirthDay: dayInt,
+        BirthMonth: monthInt,
+        BirthYear: yearInt,
+        Gender: gender,
+        AvatarUrl: '/images/default-avatar.png' // Provide a default avatar URL
     };
 
-    try {
-      const response = await fetch(`${BASE_URL}/api/auth/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
+    console.log('Request Payload:', userData);
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Registration successful:', data);
-        navigate('/login');
-      } else {
-        navigate('/login');
-      }
+    try {
+        const response = await fetch(`${BASE_URL}/api/auth/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData),
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Registration successful:', data);
+            navigate('/login');
+        } else {
+            const errorText = await response.text();
+            console.error('Failed to register user:', errorText);
+            alert(`Failed to register user: ${errorText}`);
+        }
     } catch (error) {
-      console.error('Error:', error);
-      navigate('/login');
+        console.error('Error:', error);
+        if (error instanceof Error) {
+            alert(`Error: ${error.message}`);
+        } else {
+            alert('An unknown error occurred');
+        }
     }
-  };
+};
 
   return (
     <div className="flex h-screen">

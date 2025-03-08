@@ -5,6 +5,7 @@ interface AuthContextType {
   login: (token: string) => void;
   logout: () => void;
   token: string | null;
+  userId: string | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -28,7 +29,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setToken(newToken);
     localStorage.setItem('loggedIn', JSON.stringify(true));
     localStorage.setItem('token', newToken);
-    console.log('Token set during login:', newToken); // Log the token when it is set
+    console.log('Token set during login:', newToken); 
   };
 
   const logout = () => {
@@ -51,7 +52,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ loggedIn, login, logout, token }}>
+    <AuthContext.Provider value={{ loggedIn, login, logout, token, userId: null }}>
       {children}
     </AuthContext.Provider>
   );
