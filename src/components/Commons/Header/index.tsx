@@ -7,6 +7,7 @@ const Header = () => {
   const [isHomeActive, setIsHomeActive] = useState(false);
   const [isNotificationsActive, setIsNotificationsActive] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string>('/images/avatars/frame (1).svg');
+  const [homeIconSrc, setHomeIconSrc] = useState<string>('/images/HomeIcon.svg');
   const navigate = useNavigate();
   const authContext = useAuth();
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -27,7 +28,7 @@ const Header = () => {
         });
         if (response.ok) {
           const data = await response.json();
-          // Якщо є avatarUrl, оновлюємо його з параметром часу
+
           if (data.avatarUrl) {
             updateAvatarUrl(data.avatarUrl);
           } else {
@@ -47,7 +48,12 @@ const Header = () => {
   }, [authContext, BASE_URL]);
 
   const handleHomeClick = () => {
-    setIsHomeActive(prevState => !prevState);
+    setHomeIconSrc('/images/HomeIcon2.svg');
+    setTimeout(() => {
+      setHomeIconSrc('/images/HomeIcon.svg');
+    }, 200);
+    setIsHomeActive(!isHomeActive);
+    navigate('/main');
   };
 
   const handleNotificationsClick = () => {
@@ -67,7 +73,7 @@ const Header = () => {
               <img src="/images/logos/Logo.svg" alt="SoundScape Logo" className="h-12 flex-shrink-0" />
               <button className="ml-5 flex-shrink-0" onClick={handleHomeClick}>
                 <img
-                  src={isHomeActive ? "/images/HomeIcon2.svg" : "/images/HomeIcon.svg"}
+                  src={homeIconSrc}
                   alt="Home"
                   className="h-12"
                 />

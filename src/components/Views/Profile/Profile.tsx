@@ -125,6 +125,34 @@ const Profile: React.FC<ProfileProps> = ({ }) => {
         setIsEditing(true);
     };
 
+    const handleSendConfirmationEmail = async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/api/auth/request-email-confirmation`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authContext?.token}`
+                }
+            });
+
+            if (response.ok) {
+                console.log('Confirmation email sent successfully');
+                alert('Confirmation email sent successfully');
+            } else {
+                const errorText = await response.text();
+                console.error('Failed to send confirmation email:', errorText);
+                alert(`Failed to send confirmation email: ${errorText}`);
+            }
+        } catch (error) {
+            console.error('Error sending confirmation email:', error);
+            if (error instanceof Error) {
+                alert(`Error: ${error.message}`);
+            } else {
+                alert('An unknown error occurred');
+            }
+        }
+    };
+
     return (
         <div className="profile-wrapper">
             <div className="profile-container">
@@ -213,14 +241,13 @@ const Profile: React.FC<ProfileProps> = ({ }) => {
                 )}
 
                 {!isEmailConfirmed && (
-                    <button className="btnEdit">Підтвердити емейл</button>
+                    <button className="btnEdit" onClick={handleSendConfirmationEmail}>Підтвердити емейл</button>
                 )}
 
-
-                <button className="btn btn-edit" onClick={handleEditClick}>Редагувати профіль</button>
-                <button className="btn btn-settings">Налаштування</button>
-                <button className="btn btn-support">Підтримка</button>
-                <button onClick={handleLogout} className="btn btn-logout">Вийти</button>
+                <button className="btnProfile btn-edit" onClick={handleEditClick}>Редагувати профіль</button>
+                <button className="btnProfile btn-settings">Налаштування</button>
+                <button className="btnProfile btn-support">Підтримка</button>
+                <button onClick={handleLogout} className="btnProfile btn-logout">Вийти</button>
             </div>
 
             <div className="profile-lists-container">

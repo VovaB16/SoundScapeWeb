@@ -85,7 +85,7 @@
     gap: 16px;
 }
 
-.btn {
+.btnProfile {
     display: flex;
     padding: 16px;
     align-items: center;
@@ -104,11 +104,11 @@
     transition: background 0.3s;
 }
 
-.btn:hover {
+.btnProfile:hover {
     background: rgba(45, 1, 64, 0.5);
 }
 
-.btn::before {
+.btnProfile::before {
     content: "";
     display: block;
     width: 24px;

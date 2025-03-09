@@ -49,7 +49,7 @@ const RegisterStep3 = () => {
         BirthMonth: monthInt,
         BirthYear: yearInt,
         Gender: gender,
-        AvatarUrl: '/images/default-avatar.png' // Provide a default avatar URL
+        AvatarUrl: '/images/default-avatar.png'
     };
 
     console.log('Request Payload:', userData);
@@ -69,8 +69,8 @@ const RegisterStep3 = () => {
             navigate('/login');
         } else {
             const errorText = await response.text();
-            console.error('Failed to register user:', errorText);
-            alert(`Failed to register user: ${errorText}`);
+            console.log('Failed to register user:', errorText);
+            navigate('/login');
         }
     } catch (error) {
         console.error('Error:', error);
