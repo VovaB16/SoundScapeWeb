@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { RegistrationContext } from './RegistrationContext';
+import { RegistrationContext } from '../../../context/RegistrationContext';
 
 const RegisterStep3 = () => {
   const navigate = useNavigate();

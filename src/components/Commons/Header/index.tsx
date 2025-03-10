@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'; 
 import { useNavigate } from 'react-router-dom';
 import NavigationMenu from './NavigationMenu';
-import { useAuth } from '../Auth/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 
 const Header = () => {
   const [isHomeActive, setIsHomeActive] = useState(false);

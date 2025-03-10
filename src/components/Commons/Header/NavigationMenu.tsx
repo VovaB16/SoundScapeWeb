@@ -1,7 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const NavigationMenu = () => {
   const [activeButtons, setActiveButtons] = useState<string[]>([]);
+  const [favoriteIconSrc, setFavoriteIconSrc] = useState<string>('/images/favoritesIcon.svg');
+  const [LibraryIconSrc, setLibraryIconSrc] = useState<string>('/images/libraryIcon.svg');
+  const navigate = useNavigate();
 
   const handleButtonClick = (buttonName: string) => {
     setActiveButtons(prevState =>
@@ -11,21 +15,39 @@ const NavigationMenu = () => {
     );
   };
 
+  const handleFavoritesClick = () => {
+    setFavoriteIconSrc('/images/favoriteIcon2.svg');
+    setTimeout(() => {
+      setFavoriteIconSrc('/images/favoritesIcon.svg');
+    }, 200); 
+    handleButtonClick('favorites');
+    navigate('/favourite');
+  };
+
+  const handleLibraryClick = () => {
+    setLibraryIconSrc('/images/libraryIcon2.svg');
+    setTimeout(() => {
+      setLibraryIconSrc('/images/libraryIcon.svg');
+    }, 200); 
+    handleButtonClick('library');
+    navigate('/library');
+  };
+
   return (
     <nav className="font-noto-sans">
       <div className="flex w-full h-[92px] p-[24px_330px] justify-between items-center flex-shrink-0 rounded-b-[20px] bg-[#2D0140]">
         <div className="flex items-center gap-4">
-          <button className="flex items-center" onClick={() => handleButtonClick('library')}>
+          <button className="flex items-center" onClick={handleLibraryClick}>
             <img
-              src={activeButtons.includes('library') ? "/images/libraryIcon2.svg" : "/images/libraryIcon.svg"}
+              src={LibraryIconSrc}
               alt="My Library"
               className="h-8 w-8"
             />
             <span className="ml-2 text-white">Моя бібліотека</span>
           </button>
-          <button className="flex items-center" onClick={() => handleButtonClick('favorites')}>
+          <button className="flex items-center" onClick={handleFavoritesClick}>
             <img
-              src={activeButtons.includes('favorites') ? "/images/favoriteIcon2.svg" : "/images/favoritesIcon.svg"}
+              src={favoriteIconSrc}
               alt="Favorite Songs"
               className="h-8 w-8"
             />

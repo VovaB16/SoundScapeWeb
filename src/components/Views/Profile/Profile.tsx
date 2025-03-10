@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../Commons/Auth/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { useState, useEffect } from 'react';
 import './Profile.css';
 
@@ -258,7 +258,7 @@ const Profile: React.FC<ProfileProps> = ({ }) => {
                 <ul>
                     {[...Array(5)].map((_, index) => (
                         <li key={index}>
-                            <div className="playlist-item">
+                            <div className="playlist-item-profile">
                                 <div>
                                     <img src="/images/profilePage/subscribe.svg" alt="Subscription Avatar" className="subscription-avatar" />
                                 </div>
@@ -275,7 +275,7 @@ const Profile: React.FC<ProfileProps> = ({ }) => {
                 <ul>
                     {[...Array(5)].map((_, index) => (
                         <li key={index}>
-                            <div className="playlist-item">
+                            <div className="playlist-item-profile">
                                 <div className="playlist-avatar-container">
                                     <img src="/images/profilePage/playlistAvatar.svg" alt="Playlist Avatar" className="playlist-avatar" />
                                 </div>

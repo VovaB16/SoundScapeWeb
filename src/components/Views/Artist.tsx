@@ -70,29 +70,54 @@ const Artist = () => {
       try {
         const response = await fetch(`${BASE_URL}/api/albums/artist/${id}`);
         const data = await response.json();
-        const mappedAlbums: Album[] = data.map((album: any) => ({
-          title: album.title,
-          year: album.releaseDate.split('-')[0],
-          image: album.imageUrl,
-        })).slice(0, 5);
-        setAlbums(mappedAlbums);
+        const albumsArray = data.$values || [];
+        if (Array.isArray(albumsArray)) {
+          const mappedAlbums: Album[] = albumsArray.map((album: any) => ({
+            title: album.title,
+            year: album.releaseDate.split('-')[0],
+            image: album.imageUrl,
+          })).slice(0, 5);
+          setAlbums(mappedAlbums);
+        } else {
+          console.error('Albums data is not an array:', data);
+        }
       } catch (error) {
         console.error('Error fetching albums:', error);
       }
     };
-
+    
     const fetchSingles = async () => {
       try {
         const response = await fetch(`${BASE_URL}/api/artists/${id}/singles`);
         const data = await response.json();
-        const mappedSingles: Single[] = data.map((single: any) => ({
-          title: single.title,
-          year: single.releaseDate.split('-')[0],
-          image: single.imageUrl,
-        }));
-        setSingles(mappedSingles);
+        const singlesArray = data.$values || [];
+        if (Array.isArray(singlesArray)) {
+          const mappedSingles: Single[] = singlesArray.map((single: any) => ({
+            title: single.title,
+            year: single.releaseDate.split('-')[0],
+            image: single.imageUrl,
+          }));
+          setSingles(mappedSingles);
+        } else {
+          console.error('Singles data is not an array:', data);
+        }
       } catch (error) {
         console.error('Error fetching singles:', error);
+      }
+    };
+    
+    const fetchTracks = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/api/tracks`);
+        const data = await response.json();
+        const tracksArray = data.$values || [];
+        if (Array.isArray(tracksArray)) {
+          setTracks(tracksArray.slice(0, 5));
+        } else {
+          console.error('Tracks data is not an array:', data);
+        }
+      } catch (error) {
+        console.error('Error fetching tracks:', error);
       }
     };
 
@@ -126,15 +151,7 @@ const Artist = () => {
       }
     };
 
-    const fetchTracks = async () => {
-      try {
-        const response = await fetch(`${BASE_URL}/api/tracks`);
-        const data = await response.json();
-        setTracks(data.slice(0, 5));
-      } catch (error) {
-        console.error('Error fetching tracks:', error);
-      }
-    };
+
 
     fetchArtist();
     fetchAlbums();

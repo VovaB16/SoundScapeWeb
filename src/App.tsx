@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
-import { useAuth, AuthProvider } from './components/Commons/Auth/AuthContext';
+import { useAuth, AuthProvider } from './components/context/AuthContext';
 import Artist from './components/Views/Artist';
 import Header from './components/Commons/Header/index';
 import HeaderGuest from './components/Commons/Header/HeaderGuest';
@@ -8,7 +8,7 @@ import Footer from './components/Commons/Footers/index';
 import RegisterStep1 from './components/Commons/Auth/Register/RegisterStep1';
 import RegisterStep2 from './components/Commons/Auth/Register/RegisterStep2';
 import RegisterStep3 from './components/Commons/Auth/Register/RegisterStep3';
-import { RegistrationProvider } from './components/Commons/Auth/Register/RegistrationContext';
+import { RegistrationProvider } from './components/context/RegistrationContext';
 import Profile from './components/Views/Profile/Profile';
 import Main from './components/Views/MainPage/main';
 import MainGuest from './components/Views/MainGuest/MainGuest';
@@ -19,6 +19,9 @@ import CreateNewPassword from './components/Commons/Auth/ChangePassword/CreateNe
 import SuccessfulPasswordChange from './components/Commons/Auth/ChangePassword/SuccessfulPasswordChange';
 import Logout from './components/Commons/Auth/Logout';
 import PremiumPage from './components/Views/Premium/PremiumPage';
+import Favourite from './components/Views/favouritePage/favourite';
+import MyLibrary from './components/Views/MyLibraryPage/MyLibrary';
+import PlaylistPage from './components/Views/PlaylistPage/playlistPage';
 
 const AppContent = () => {
   const auth = useAuth();
@@ -61,6 +64,9 @@ const AppContent = () => {
                 <Route path="/register-step2" element={<Navigate to="/main" />} />
                 <Route path="/register-step3" element={<Navigate to="/main" />} />
                 <Route path="/main-guest" element={<Navigate to="/main" />} />
+                <Route path="/favourite" element={<Favourite />} />
+                <Route path="/library" element={<MyLibrary />} />
+                <Route path="/playlist/:id" element={<PlaylistPage />} />
                 <Route path="/logout" element={<Logout />} />
               </>
             ) : (

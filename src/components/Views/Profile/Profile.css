@@ -203,7 +203,7 @@
     text-align: center;
 }
 
-.playlist-item {
+.playlist-item-profile {
     display: flex;
     flex-direction: column;
     align-items: center;
