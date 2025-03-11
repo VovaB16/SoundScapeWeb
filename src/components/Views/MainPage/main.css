@@ -12,6 +12,12 @@
     justify-content: space-between;
 }
 
+.image-container {
+    width: 150px;
+    height: 150px;
+    border-radius: 8px;
+}
+
 .nav-main .lists {
     display: flex;
     gap: 15px;
@@ -344,4 +350,20 @@ ul li::before {
     border-radius: 20px;
     overflow: hidden;
     background: url("~/images/home_page_images/mv-example-video.mp4") top, no-repeat;
+}
+
+.header-main-page {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-all-songs {
+    margin-left: auto;
+    color: gray;
+}
+
+.add-icon-image-main {
+    width: 34px;
+    height: 34px;
 }

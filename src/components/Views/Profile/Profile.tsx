@@ -17,7 +17,7 @@ const Profile: React.FC<ProfileProps> = ({ }) => {
     const [email, setEmail] = useState<string>('');
     const [avatarUrl, setAvatarUrl] = useState<string>('');
     const [, setAccountCreationDate] = useState<string>('');
-    const [playlistsCount] = useState<number>(0);
+    const [playlists, setPlaylists] = useState<any[]>([]);
     const [subscriptionsCount] = useState<number>(0);
     const [birthDay, setBirthDay] = useState('');
     const [birthMonth, setBirthMonth] = useState('');
@@ -57,9 +57,35 @@ const Profile: React.FC<ProfileProps> = ({ }) => {
         }
     };
 
+    const fetchUserPlaylists = async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/api/playlists/user`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authContext?.token}`
+                }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                //console.log('Playlists response:', data); // Log the response
+                if (data && Array.isArray(data.$values)) {
+                    setPlaylists(data.$values);
+                } else {
+                    console.error('Playlists response is not an array');
+                }
+            } else {
+                console.error('Failed to fetch playlists');
+            }
+        } catch (error) {
+            console.error('Error fetching playlists:', error);
+        }
+    };
+
     useEffect(() => {
         if (authContext?.token) {
             fetchUserData();
+            fetchUserPlaylists();
         }
     }, [authContext]);
 
@@ -173,7 +199,7 @@ const Profile: React.FC<ProfileProps> = ({ }) => {
                             <div className="profile-details-line"></div>
                             <div className="profile-details">
                                 <p>2025</p>
-                                <p>{playlistsCount} Плейлисти</p>
+                                <p>{playlists.length} Плейлисти</p>
                                 <p>{subscriptionsCount} Підписки</p>
                             </div>
                         </div>
@@ -273,13 +299,16 @@ const Profile: React.FC<ProfileProps> = ({ }) => {
                     <a href="#" className="show-all">Показати всі</a>
                 </div>
                 <ul>
-                    {[...Array(5)].map((_, index) => (
-                        <li key={index}>
+                    {playlists.slice(0, 5).map((playlist) => (
+                        <li key={playlist.id}>
                             <div className="playlist-item-profile">
                                 <div className="playlist-avatar-container">
-                                    <img src="/images/profilePage/playlistAvatar.svg" alt="Playlist Avatar" className="playlist-avatar" />
+                                    <img src={playlist.imageUrl || '/images/profilePage/playlistAvatar.svg'} alt="Playlist Avatar" className="playlist-avatar" onError={(e) => {
+                                        console.error('Failed to load image:', e.currentTarget.src);
+                                        e.currentTarget.src = '/images/profilePage/playlistAvatar.svg';
+                                    }} />
                                 </div>
-                                <p className="playlist-name">Плейлист {index + 1}</p>
+                                <p className="playlist-name">{playlist.name}</p>
                             </div>
                         </li>
                     ))}

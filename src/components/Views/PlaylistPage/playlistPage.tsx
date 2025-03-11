@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';  
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './PlaylistPage.css';
 
@@ -22,9 +22,11 @@ interface Playlist {
 const PlaylistPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const [playlist, setPlaylist] = useState<Playlist | null>(null);
+    const navigate = useNavigate();
+    const [showDeleteIcons, setShowDeleteIcons] = useState(false);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const [durations, setDurations] = useState<{ [key: string]: string }>({});
+    const [, setDurations] = useState<{ [key: string]: string }>({});
     const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(0);
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -93,6 +95,10 @@ const PlaylistPage: React.FC = () => {
         }
     };
 
+    const handleAddTrackClick = () => {
+        navigate(`/playlist/addTrack/${id}`);
+    };
+
     const handlePlayPause = () => {
         if (isPlaying) {
             audioRef.current?.pause();
@@ -120,6 +126,25 @@ const PlaylistPage: React.FC = () => {
     //console.log(`Playlist image URL: ${playlistImageUrl}`);
     //console.log(`Playlist image: ${playlist.imageUrl}`);
 
+
+
+    const handleDeleteTrack = async (trackId: string) => {
+        try {
+            await axios.delete(`${BASE_URL}/api/playlists/${id}/tracks/${trackId}`);
+            setPlaylist((prevPlaylist) => prevPlaylist ? {
+                ...prevPlaylist,
+                playlistTracks: {
+                    $values: prevPlaylist.playlistTracks.$values.filter(pt => pt.track.id !== trackId)
+                }
+            } : null);
+        } catch (err) {
+            console.error('Failed to delete track');
+        }
+    };
+    const toggleDeleteIcons = () => {
+        setShowDeleteIcons(prev => !prev);
+    };
+
     return (
         <div className="playlist-container">
             <audio ref={audioRef} />
@@ -141,6 +166,13 @@ const PlaylistPage: React.FC = () => {
                         <button onClick={handlePlayPause} className='play-button-playlist2' >
                             <img src={isPlaying ? '/images/PauseIcon.svg' : '/images/PlayIcon.svg'} alt={isPlaying ? 'Pause' : 'Play'} className='play-button-playlist'/>
                         </button>
+                        <div className="dropdown-playlist">
+                            <button className="dropdown-button">...</button>
+                            <div className="dropdown-content">
+                                <button onClick={handleAddTrackClick}>Додати трек</button>
+                                <button onClick={toggleDeleteIcons} className="delete-track-button">Видалити трек</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -149,21 +181,20 @@ const PlaylistPage: React.FC = () => {
                 {tracks.length > 0 ? (
                     tracks.map((track, index) => {
                         const trackImage = track.imageUrl ? `${BASE_URL}${track.imageUrl}` : `${BASE_URL}/images/default-track.png`;
-                        console.log(`Track ${index + 1} image URL: ${trackImage}`);
+                        //console.log(`Track ${index + 1} image URL: ${trackImage}`);
                         return (
                             <div key={track.id} className="track-item">
                                 <div className="track-number">{index + 1}</div>
-                                <img
-                                    className="track-image"
-                                    src={trackImage}
-                                    alt={track.title}
-                                    onError={(e) => e.currentTarget.src = `${BASE_URL}/images/default-track.png`}
-                                />
+                                <img className="track-image" src={trackImage} alt={track.title} />
                                 <div className="track-info">
                                     <p className="track-title">{track.title}</p>
                                     <p className="track-artist">{track.artist}</p>
                                 </div>
-                                <p className="track-duration">{durations[track.id] || '00:00'}</p>
+                                {showDeleteIcons && (
+                                    <button className="delete-icon-playlist" onClick={() => handleDeleteTrack(track.id)}>
+                                    <img src="/images/deleteIcon.svg" alt="Delete" />
+                                </button>
+                                )}
                             </div>
                         );
                     })

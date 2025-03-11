@@ -22,6 +22,8 @@ import PremiumPage from './components/Views/Premium/PremiumPage';
 import Favourite from './components/Views/favouritePage/favourite';
 import MyLibrary from './components/Views/MyLibraryPage/MyLibrary';
 import PlaylistPage from './components/Views/PlaylistPage/playlistPage';
+import AllSongs from './components/Views/allSongsPage/allSongs';
+import AddTrackToPlaylist from './components/Views/PlaylistPage/AddTrackToPlaylist';
 
 const AppContent = () => {
   const auth = useAuth();
@@ -67,6 +69,8 @@ const AppContent = () => {
                 <Route path="/favourite" element={<Favourite />} />
                 <Route path="/library" element={<MyLibrary />} />
                 <Route path="/playlist/:id" element={<PlaylistPage />} />
+                <Route path="/playlist/AddTrack/:id" element={<AddTrackToPlaylist />} />
+                <Route path="/all-songs" element={<AllSongs />} />
                 <Route path="/logout" element={<Logout />} />
               </>
             ) : (
@@ -74,6 +78,15 @@ const AppContent = () => {
                 <Route path="/main-guest" element={<MainGuest />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register-step1" element={<RegisterStep1 />} />
+
+                <Route path="/favourite" element={<Navigate to="/main-guest" />} />
+                <Route path="/library" element={<Navigate to="/main-guest" />} />
+                <Route path="/profile" element={<Navigate to="/main-guest" />} />
+                <Route path="/artist/:id" element={<Navigate to="/main-guest" />} />
+                <Route path="/playlist/:id" element={<Navigate to="/main-guest" />} />
+                <Route path="/all-songs" element={<Navigate to="/main-guest" />} />
+                <Route path="/playlist/AddTrack/:id" element={<Navigate to="/main-guest" />} />
+
                 <Route path="/register-step2" element={<RegisterStep2 />} />
                 <Route path="/register-step3" element={<RegisterStep3 />} />
                 <Route path="/main" element={<Navigate to="/main-guest" />} />

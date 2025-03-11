@@ -26,7 +26,7 @@ const MyLibrary: React.FC = () => {
                     }
                 });
                 const data = await response.json();
-                console.log('Fetched data:', data);
+                //console.log('Fetched data:', data);
                 if (data.$values && Array.isArray(data.$values)) {
                     setPlaylists(data.$values);
                 } else {

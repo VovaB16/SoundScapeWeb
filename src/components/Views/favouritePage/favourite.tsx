@@ -24,7 +24,7 @@ const Favourite: React.FC = () => {
                 });
                 if (response.ok) {
                     const data = await response.json();
-                    console.log('Fetched data:', data); 
+                    //console.log('Fetched data:', data); 
                     if (data.$values && Array.isArray(data.$values)) {
                         const tracksWithYear = data.$values.map((track: any) => ({
                             ...track,
@@ -120,32 +120,38 @@ const Favourite: React.FC = () => {
                 />
             </div>
             <div>
-                {filteredTracks.map((track) => (
-                    <div
-                        key={track.id}
-                        className={`track-item-favourite ${currentTrack === track.filePath && isPlaying ? 'playing' : trackEnded && currentTrack === track.filePath ? 'ended' : ''}`}
-                    >
-                        <img src={`${BASE_URL}${track.imageUrl}` || '/images/placeholder.png'} alt={track.title} className="track-image-favourite" />
-                        <div className="track-details-favourite">
-                            <span className="track-title-favourite">{track.title}</span>
-                            <div className="track-sub-details">
-                                <span className="track-artist">{track.artist}</span>
-                                <span className="track-year">• {track.year}</span>
+                {filteredTracks.length === 0 ? (
+                    <div className="no-tracks-message">
+                        Ви ще не додали улюблені треки
+                    </div>
+                ) : (
+                    filteredTracks.map((track) => (
+                        <div
+                            key={track.id}
+                            className={`track-item-favourite ${currentTrack === track.filePath && isPlaying ? 'playing' : trackEnded && currentTrack === track.filePath ? 'ended' : ''}`}
+                        >
+                            <img src={`${BASE_URL}${track.imageUrl}` || '/images/placeholder.png'} alt={track.title} className="track-image-favourite" />
+                            <div className="track-details-favourite">
+                                <span className="track-title-favourite">{track.title}</span>
+                                <div className="track-sub-details">
+                                    <span className="track-artist">{track.artist}</span>
+                                    <span className="track-year">• {track.year}</span>
+                                </div>
+                            </div>
+                            <div className="track-actions">
+                                <button className="track-button" onClick={() => handlePlayPause(track.filePath)}>
+                                    <img
+                                        src={currentTrack === track.filePath && isPlaying ? '/images/PauseIcon.svg' : trackEnded && currentTrack === track.filePath ? '/images/PlayIcon.svg' : '/images/PlayIcon.svg'}
+                                        alt={isPlaying ? 'Pause' : trackEnded ? 'Stopped' : 'Play'}
+                                    />
+                                </button>
+                                <button className="delete-button" onClick={() => handleDeleteTrack(track.id)}>
+                                    <img src={'/images/deleteIcon.svg'} alt={'Delete'} />
+                                </button>
                             </div>
                         </div>
-                        <div className="track-actions">
-                            <button className="track-button" onClick={() => handlePlayPause(track.filePath)}>
-                                <img
-                                    src={currentTrack === track.filePath && isPlaying ? '/images/PauseIcon.svg' : trackEnded && currentTrack === track.filePath ? '/images/PlayIcon.svg' : '/images/PlayIcon.svg'}
-                                    alt={isPlaying ? 'Pause' : trackEnded ? 'Stopped' : 'Play'}
-                                />
-                            </button>
-                            <button className="delete-button" onClick={() => handleDeleteTrack(track.id)}>
-                                <img src={'/images/deleteIcon.svg'} alt={'Delete'} />
-                            </button>
-                        </div>
-                    </div>
-                ))}
+                    ))
+                )}
             </div>
         </div>
     );
