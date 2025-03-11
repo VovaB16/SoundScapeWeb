@@ -18,7 +18,8 @@ const Profile: React.FC<ProfileProps> = ({ }) => {
     const [avatarUrl, setAvatarUrl] = useState<string>('');
     const [, setAccountCreationDate] = useState<string>('');
     const [playlists, setPlaylists] = useState<any[]>([]);
-    const [subscriptionsCount] = useState<number>(0);
+    const [subscriptions, setSubscriptions] = useState<any[]>([]);
+    const [subscriptionsCount, setSubscriptionsCount] = useState<number>(0);
     const [birthDay, setBirthDay] = useState('');
     const [birthMonth, setBirthMonth] = useState('');
     const [birthYear, setBirthYear] = useState('');
@@ -68,7 +69,6 @@ const Profile: React.FC<ProfileProps> = ({ }) => {
             });
             if (response.ok) {
                 const data = await response.json();
-                //console.log('Playlists response:', data); // Log the response
                 if (data && Array.isArray(data.$values)) {
                     setPlaylists(data.$values);
                 } else {
@@ -82,10 +82,38 @@ const Profile: React.FC<ProfileProps> = ({ }) => {
         }
     };
 
+    const fetchUserSubscriptions = async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/api/artists/subscriptions`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authContext?.token}`
+                }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Subscriptions data:', data); // Log the response data
+                if (data && Array.isArray(data.$values)) {
+                    setSubscriptions(data.$values);
+                    setSubscriptionsCount(data.$values.length);
+                } else {
+                    setSubscriptions([]);
+                    setSubscriptionsCount(0);
+                }
+            } else {
+                console.error('Failed to fetch subscriptions');
+            }
+        } catch (error) {
+            console.error('Error fetching subscriptions:', error);
+        }
+    };
+
     useEffect(() => {
         if (authContext?.token) {
             fetchUserData();
             fetchUserPlaylists();
+            fetchUserSubscriptions();
         }
     }, [authContext]);
 
@@ -177,6 +205,13 @@ const Profile: React.FC<ProfileProps> = ({ }) => {
                 alert('An unknown error occurred');
             }
         }
+    };
+
+    const getFullImageUrl = (imageUrl: string) => {
+        if (imageUrl.startsWith('http')) {
+            return imageUrl;
+        }
+        return `${BASE_URL}${imageUrl}`;
     };
 
     return (
@@ -282,13 +317,13 @@ const Profile: React.FC<ProfileProps> = ({ }) => {
                     <a href="#" className="show-all">Показати всі</a>
                 </div>
                 <ul>
-                    {[...Array(5)].map((_, index) => (
-                        <li key={index}>
+                    {Array.isArray(subscriptions) && subscriptions.slice(0, 5).map((subscription) => (
+                        <li key={subscription.id}>
                             <div className="playlist-item-profile">
                                 <div>
-                                    <img src="/images/profilePage/subscribe.svg" alt="Subscription Avatar" className="subscription-avatar" />
+                                    <img src={getFullImageUrl(subscription.imageUrl)} alt="Subscription Avatar" className="subscription-avatar" />
                                 </div>
-                                <p className="subscription-name">Підписка {index + 1}</p>
+                                <p className="subscription-name">{subscription.name}</p>
                             </div>
                         </li>
                     ))}

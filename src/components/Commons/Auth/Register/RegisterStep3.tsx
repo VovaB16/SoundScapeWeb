@@ -75,7 +75,7 @@ const RegisterStep3 = () => {
     } catch (error) {
         console.error('Error:', error);
         if (error instanceof Error) {
-            alert(`Error: ${error.message}`);
+            //alert(`Error: ${error.message}`);
         } else {
             alert('An unknown error occurred');
         }

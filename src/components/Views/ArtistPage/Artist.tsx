@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { Link, useParams } from 'react-router-dom';
-
+import { useAuth } from '../../context/AuthContext';
+import './Artist.css';
 interface Album {
   title: string;
   year: string;
@@ -44,6 +45,9 @@ const Artist = () => {
   const [currentTrack, setCurrentTrack] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [trackEnded, setTrackEnded] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  //const [isLoadingStatus, setIsLoadingStatus] = useState(true);
+  const { token } = useAuth();
   const audioRef = useRef(new Audio());
 
   const API_KEY = import.meta.env.VITE_TICKETMASTER_API_KEY;
@@ -54,7 +58,7 @@ const Artist = () => {
     const fetchArtist = async () => {
       try {
         const response = await fetch(`${BASE_URL}/api/artists/${id}`);
-        
+
         if (!response.ok) {
           throw new Error('Artist not found');
         }
@@ -85,7 +89,7 @@ const Artist = () => {
         console.error('Error fetching albums:', error);
       }
     };
-    
+
     const fetchSingles = async () => {
       try {
         const response = await fetch(`${BASE_URL}/api/artists/${id}/singles`);
@@ -105,7 +109,7 @@ const Artist = () => {
         console.error('Error fetching singles:', error);
       }
     };
-    
+
     const fetchTracks = async () => {
       try {
         const response = await fetch(`${BASE_URL}/api/tracks`);
@@ -118,6 +122,24 @@ const Artist = () => {
         }
       } catch (error) {
         console.error('Error fetching tracks:', error);
+      }
+    };
+
+    const fetchSubscriptions = async () => {
+      if (!token) return;
+
+      try {
+        const response = await axios.get(
+          `${BASE_URL}/api/artists/${id}/isSubscribed`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        const { isSubscribed } = response.data;
+        setIsSubscribed(isSubscribed);
+      } catch (error) {
+        console.error("Помилка отримання підписок:", error);
       }
     };
 
@@ -150,9 +172,7 @@ const Artist = () => {
         console.error('Error fetching concerts:', error);
       }
     };
-
-
-
+    fetchSubscriptions();
     fetchArtist();
     fetchAlbums();
     fetchSingles();
@@ -181,7 +201,7 @@ const Artist = () => {
   useEffect(() => {
     const handleEnded = () => {
       setTrackEnded(true);
-      setIsPlaying(false); 
+      setIsPlaying(false);
     };
 
     const audio = audioRef.current;
@@ -204,6 +224,42 @@ const Artist = () => {
     );
   }
 
+  const handleSubscription = async () => {
+    if (!token) {
+      console.error("Немає токена, не можна підписатися");
+      return;
+    }
+  
+    setLoading(true);
+  
+    try {
+      if (isSubscribed) {
+        await axios.delete(
+          `${BASE_URL}/api/artists/${id}/unsubscribe`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+      } else {
+        await axios.post(
+          `${BASE_URL}/api/artists/${id}/subscribe`,
+          {},
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+      }
+  
+      setIsSubscribed((prev) => !prev);
+    } catch (error) {
+      console.error("Помилка підписки:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+
   return (
     <div className="mt-[40px] flex justify-center">
       <div className="flex w-[1320px] items-start gap-[100px] flex-shrink-0">
@@ -218,6 +274,13 @@ const Artist = () => {
             <div className="absolute top-4 left-4 text-white" style={{ fontFamily: 'Noto Sans', fontSize: '96px', fontWeight: 700, lineHeight: 'normal', textTransform: 'capitalize' }}>
               {artist.name}
             </div>
+            <button
+            onClick={handleSubscription}
+            className={`subscribe-button-artist ${isSubscribed ? "subscribed" : ""} ${loading ? "disabled" : ""}`}
+            disabled={loading}
+          >
+            {loading ? "Зачекайте..." : isSubscribed ? "Відписатися" : "Підписатися"}
+          </button>
           </div>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">Альбоми</h2>
@@ -287,7 +350,6 @@ const Artist = () => {
                 <img src={'/images/Container.svg'} alt={'.'} className="w-[4px] h-[4px]" />
                 <img src={'/images/Container.svg'} alt={'.'} className="w-[4px] h-[4px]" />
               </button>
-
             </div>
           ))}
           <h2 className="text-2xl font-bold mb-4 mt-16 self-start">Концерти</h2>

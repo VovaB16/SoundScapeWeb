@@ -1,0 +1,42 @@
+
+.subscribe-button-artist {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    border: none;
+    margin-top: 400px;
+    margin-right: 570px;
+  }
+  
+  .subscribe-button-artist:hover {
+    transform: scale(1.05);
+  }
+  
+  .subscribe-button-artist.subscribed {
+    background-color: #e53e3e; 
+  }
+  
+  .subscribe-button-artist.subscribed:hover {
+    background-color: #c53030;
+  }
+  
+  .subscribe-button-artist:not(.subscribed) {
+    background-color: #3182ce;
+  }
+  
+  .subscribe-button-artist:not(.subscribed):hover {
+    background-color: #2b6cb0;
+  }
+  
+  .subscribe-button-artist.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  

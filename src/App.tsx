@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useAuth, AuthProvider } from './components/context/AuthContext';
-import Artist from './components/Views/Artist';
+import Artist from './components/Views/ArtistPage/Artist';
 import Header from './components/Commons/Header/index';
 import HeaderGuest from './components/Commons/Header/HeaderGuest';
 import Footer from './components/Commons/Footers/index';

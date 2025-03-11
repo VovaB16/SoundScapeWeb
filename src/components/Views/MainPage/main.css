@@ -155,15 +155,18 @@
 
 .block_popular-artists .container {
     display: flex;
-    justify-content: space-between;
+    justify-content: center; 
+    gap: 48px;
     margin: 24px 0;
+    flex-wrap: wrap;
 }
 
 .block_popular-artists .row {
-    width: 100%;
+    width: auto; 
     display: flex;
-    justify-content: space-between;
-    margin: 0 32px;
+    justify-content: center; 
+    gap: 48px;
+    margin: 0;
 }
 
 .block_popular-artists .row .item p {
@@ -179,6 +182,8 @@
 .block_popular-artists .container button {
     background-color: transparent;
 }
+
+
 
 /* block top 10 */
 .block_top10 .title {
