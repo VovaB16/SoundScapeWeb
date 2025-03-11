@@ -1,0 +1,129 @@
+.favourite-container {
+    padding: 20px;
+    max-width: 1320px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    padding-left: 300px;
+    padding-right: 300px;
+}
+
+.track-item-favourite {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-radius: 10px;
+    backdrop-filter: blur(7.5px);
+    background-color: rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+    width: 1200px;
+    padding: 8px;
+    margin-bottom: 16px;
+}
+
+.track-details-favourite {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.track-sub-details {
+    display: flex;
+    gap: 8px;
+
+    color: var(--Gray, #B3B3B3);
+    font-family: "Noto Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.track-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+}
+
+.track-button img,
+.more-options img {
+    width: 34px;
+    height: 34px;
+}
+
+.track-item-favourite.playing {
+    background-color: rgba(38, 0, 56, 0.65);
+}
+
+.track-item-favourite.ended {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.track-image-favourite {
+    width: 64px;
+    height: 64px;
+    border-radius: 10px;
+}
+
+.track-title-favourite {
+
+    color: #FFF;
+    font-family: "Noto Sans";
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.track-artist,
+.track-year {
+    font-size: 0.875rem;
+    color: #ccc;
+}
+
+.more-options img {
+    width: 4px;
+    height: 4px;
+}
+
+.search-input-container {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    margin-left: -500px;
+}
+
+.search-input {
+    margin-bottom: 32px;
+    display: flex;
+    width: 350px;
+    padding: 8px 16px;
+    flex-direction: column;
+    justify-content: left;
+    align-items: flex-start;
+    gap: 10px;
+    border-radius: 20px;
+    border: 1px solid var(--Text, #FFF);
+}
+
+.delete-button {
+    color: var(--Text, #FFF);
+    border: none;
+    border-radius: 20px;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-button img {
+    width: 30px;
+    height: 30px;
+    filter: brightness(0) invert(1); 
+}

@@ -1,0 +1,185 @@
+.playlist-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 300px;
+    padding-right: 300px;
+    text-align: left;
+}
+
+.playlist-header {
+    display: flex;
+    align-items: start;
+    justify-content: flex-start;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.playlist-image-page {
+    width: 250px;
+    height: 250px;
+    border-radius: 10px;
+}
+
+.playlist-title {
+    color: #FFF;
+    font-family: "Noto Sans";
+    font-size: 36px;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+.playlist-description {
+    color: var(--Gray, #B3B3B3);
+    font-family: "Noto Sans";
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.track-list {
+    margin-top: 20px;
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+gap:16px;
+}
+
+.track-item {
+    display: flex;
+    padding: 16px;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    align-self: stretch;
+    border-radius: 20px;
+    opacity: 0.66;
+    background: rgba(45, 1, 64, 0.20);
+    position: relative;
+    height: 180px;
+}
+
+.playlist-d {
+    color: #FFF;
+    font-family: "Noto Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.track-index {
+    color: #FFF;
+    text-align: center;
+    font-family: "Noto Sans";
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.track-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 8px;
+}
+
+.track-info {
+    flex-grow: 1;
+}
+
+.track-title {
+    width: 442px;
+    color: #FFF;
+    font-family: "Noto Sans";
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.track-artist {
+    color: #FFF;
+    font-family: "Noto Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.track-duration {
+    color: #FFF;
+    text-align: center;
+    font-family: "Noto Sans";
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.play-button-playlist{
+    width: 50px;
+    height: 100%;
+}
+
+.play-button-playlist2{
+    margin-top: 100px;
+}
+
+.dropdown-playlist{
+    margin-top: 100px;
+    margin-left: 16px;
+    
+}
+
+.dropdown-playlist {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-playlist:hover .dropdown-content {
+    display: block;
+    background-color: #ffffff;
+}
+
+
+
+.dropdown-content button:hover {
+    background-color: #f1f1f1;
+}
+
+.playlist-controls{
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    justify-content: start;
+    margin-top: 20px;
+}
+
+.delete-icon-playlist {
+    width: 36px;
+    height: 36px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-icon-playlist img {
+    width: 100%;
+    height: 100%;
+    filter: invert(1);
+}

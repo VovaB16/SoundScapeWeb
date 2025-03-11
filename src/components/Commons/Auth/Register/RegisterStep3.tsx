@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { RegistrationContext } from './RegistrationContext';
+import { RegistrationContext } from '../../../context/RegistrationContext';
 
 const RegisterStep3 = () => {
   const navigate = useNavigate();
@@ -15,49 +15,72 @@ const RegisterStep3 = () => {
   const [year, setYear] = useState(registrationData.birthYear || '');
   const [gender, setGender] = useState(registrationData.gender || '');
   const [agree, setAgree] = useState(false);
+  const [dayValid, setDayValid] = useState(true);
+  const [yearValid, setYearValid] = useState(true);
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   const handleRegisterClick = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!agree) {
-      alert('Ви повинні погодитися з умовами');
-      return;
+        alert('Ви повинні погодитися з умовами');
+        return;
+    }
+
+    const dayInt = parseInt(day.toString());
+    const monthInt = parseInt(month.toString());
+    const yearInt = parseInt(year.toString());
+
+    const isDayValid = dayInt >= 1 && dayInt <= 31;
+    const isMonthValid = monthInt >= 1 && monthInt <= 12;
+    const isYearValid = yearInt >= 1900 && yearInt <= 2025;
+
+    setDayValid(isDayValid);
+    setYearValid(isYearValid);
+
+    if (!isDayValid || !isMonthValid || !isYearValid) {
+        return;
     }
 
     const userData = {
-      Username: name,
-      Email: registrationData.email,
-      Password: registrationData.password,
-      BirthDay: parseInt(day.toString()),
-      BirthMonth: parseInt(month.toString()),
-      BirthYear: parseInt(year.toString()),
-      Gender: gender,
+        Username: name,
+        Email: registrationData.email,
+        Password: registrationData.password,
+        BirthDay: dayInt,
+        BirthMonth: monthInt,
+        BirthYear: yearInt,
+        Gender: gender,
+        AvatarUrl: '/images/default-avatar.png'
     };
 
-    try {
-      const response = await fetch('https://localhost:7179/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
+    console.log('Request Payload:', userData);
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Registration successful:', data);
-        navigate('/main');
-      } else {
-        //const errorData = await response.json();
-        navigate('/main');
-        //console.error('Registration error:', errorData);
-        //alert(`Error: ${errorData.message}`);
-      }
+    try {
+        const response = await fetch(`${BASE_URL}/api/auth/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData),
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Registration successful:', data);
+            navigate('/login');
+        } else {
+            const errorText = await response.text();
+            console.log('Failed to register user:', errorText);
+            navigate('/login');
+        }
     } catch (error) {
-      console.error('Error:', error);
-      navigate('/main');
-      //alert('An error occurred while registering. Please try again.');
+        console.error('Error:', error);
+        if (error instanceof Error) {
+            alert(`Error: ${error.message}`);
+        } else {
+            alert('An unknown error occurred');
+        }
     }
-  };
+};
 
   return (
     <div className="flex h-screen">
@@ -70,7 +93,7 @@ const RegisterStep3 = () => {
       </div>
 
       <div className="w-1/2 flex flex-col justify-center items-center p-8">
-        <h2 className="text-3xl font-bold mb-[48px]">Створіть пароль</h2>
+        <h2 className="text-3xl font-bold mb-[48px]">Розкажіть про себе</h2>
         <div className="w-full max-w-md">
           <div className="mb-4">
             <div className="w-[400px] h-[2px] flex-shrink-0 rounded-[10px] bg-[#D9D9D9]">
@@ -107,41 +130,55 @@ const RegisterStep3 = () => {
                 <input
                   type="number"
                   id="day"
-                  className="w-full p-3 rounded-[8px] border border-[#B3B3B3] focus-within:ring-2 focus-within:ring-[#A305A6]"
+                  className={`w-full p-3 rounded-[8px] border ${dayValid ? 'border-[#B3B3B3]' : 'border-[#EC0D0D]'} focus-within:ring-2 focus-within:ring-[#A305A6]`}
                   placeholder="ДД"
                   value={day}
                   onChange={(e) => setDay(e.target.value)}
                 />
               </div>
               <div className="flex-1">
-                <label className="text-white font-['Noto_Sans'] text-[16px] font-bold mb-2" htmlFor="month">Місяць</label>
+                <label
+                  className="text-white font-['Noto_Sans'] text-[16px] font-bold mb-2"
+                  htmlFor="month"
+                >
+                  Місяць
+                </label>
                 <select
                   id="month"
-                  className="w-full p-3 rounded-[8px] border border-[#B3B3B3] focus-within:ring-2 focus-within:ring-[#A305A6]"
+                  className="w-[206px] p-3 rounded-[10px] border border-[#B3B3B3] bg-black text-white 
+                   flex flex-col items-start gap-[10px] focus:outline-none focus:ring-2 focus:ring-[#A305A6] font-weight: 700;"
                   value={month}
                   onChange={(e) => setMonth(e.target.value)}
                 >
-                  <option value="">Оберіть місяць</option>
-                  <option value="01">Січень</option>
-                  <option value="02">Лютий</option>
-                  <option value="03">Березень</option>
-                  <option value="04">Квітень</option>
-                  <option value="05">Травень</option>
-                  <option value="06">Червень</option>
-                  <option value="07">Липень</option>
-                  <option value="08">Серпень</option>
-                  <option value="09">Вересень</option>
-                  <option value="10">Жовтень</option>
-                  <option value="11">Листопад</option>
-                  <option value="12">Грудень</option>
+                  <option className="text-black bg-white" value="01">Січень</option>
+                  <option className="text-black bg-white" value="02">Лютий</option>
+                  <option className="text-black bg-white" value="03">Березень</option>
+                  <option className="text-black bg-white" value="04">Квітень</option>
+                  <option className="text-black bg-white" value="05">Травень</option>
+                  <option className="text-black bg-white" value="06">Червень</option>
+                  <option className="text-black bg-white" value="07">Липень</option>
+                  <option className="text-black bg-white" value="08">Серпень</option>
+                  <option className="text-black bg-white" value="09">Вересень</option>
+                  <option className="text-black bg-white" value="10">Жовтень</option>
+                  <option className="text-black bg-white" value="11">Листопад</option>
+                  <option className="text-black bg-white" value="12">Грудень</option>
                 </select>
+                <style>
+                  {`
+          select option:checked {
+            background: #2D0140;
+            border-radius: 10px;
+            color: white;
+          }
+        `}
+                </style>
               </div>
               <div className="flex-1">
                 <label className="text-white font-['Noto_Sans'] text-[16px] font-bold mb-2" htmlFor="year">Рік</label>
                 <input
                   type="number"
                   id="year"
-                  className="w-full p-3 rounded-[8px] border border-[#B3B3B3] focus-within:ring-2 focus-within:ring-[#A305A6]"
+                  className={`w-full p-3 rounded-[8px] border ${yearValid ? 'border-[#B3B3B3]' : 'border-[#EC0D0D]'} focus-within:ring-2 focus-within:ring-[#A305A6]`}
                   placeholder="YYYY"
                   value={year}
                   onChange={(e) => setYear(e.target.value)}
@@ -154,7 +191,7 @@ const RegisterStep3 = () => {
               <div className="flex gap-4">
                 <div className="flex items-center">
                   <input type="radio" id="male" name="gender" className="mr-2" value="Male" checked={gender === 'Male'} onChange={(e) => setGender(e.target.value)} />
-                  <label htmlFor="male" className="text-white font-['Noto_Sans'] text-[16px]">Чоловік</label>
+                  <label htmlFor="male" className="text-white font-['Noto_Sans'] text-[16px] ">Чоловік</label>
                 </div>
                 <div className="flex items-center">
                   <input type="radio" id="female" name="gender" className="mr-2" value="Female" checked={gender === 'Female'} onChange={(e) => setGender(e.target.value)} />
@@ -190,7 +227,7 @@ const RegisterStep3 = () => {
 
             <button
               type="submit"
-              className="w-full py-3 rounded-[8px] bg-[#A305A6] text-white font-bold text-[16px] mt-6"
+              className="w-full py-3 rounded-[8px] text-white font-bold text-[16px] mt-6  bg-[rgba(163,5,166,0.50)] font-['Noto_Sans'] leading-normal hover:bg-[rgba(163,5,166,0.7)]"
             >
               Зареєструватися
             </button>

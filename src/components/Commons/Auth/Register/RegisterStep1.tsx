@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { RegistrationContext } from './RegistrationContext';
+import { RegistrationContext } from '../../../context/RegistrationContext';
 
 const RegisterStep1 = () => {
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ const RegisterStep1 = () => {
                 className="flex w-[400px] p-[16px_10px] items-center gap-[10px] rounded-[8px] border border-[#B3B3B3] text-[#B3B3B3] font-['Noto_Sans'] text-[16px] font-normal leading-normal focus:outline-none focus:ring-2 focus:ring-[#A305A6] placeholder-[#B3B3B3]"
                 id="email"
                 type="email"
-                placeholder="Email"
+                placeholder="name@dooomain.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -106,7 +106,7 @@ const RegisterStep1 = () => {
             </button>
           </div>
 
-          <div className="text-center">
+          <div className="">
             <span className="text-[#B3B3B3] font-['Noto_Sans'] text-[16px] font-normal leading-normal">
               Уже маєте акаунт?
             </span>

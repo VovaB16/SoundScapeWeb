@@ -48,11 +48,13 @@ const Artist = () => {
 
   const API_KEY = import.meta.env.VITE_TICKETMASTER_API_KEY;
   const VENUE_ID = "Za98xZG2Z67";
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     const fetchArtist = async () => {
       try {
-        const response = await fetch(`https://localhost:7179/api/artists/${id}`);
+        const response = await fetch(`${BASE_URL}/api/artists/${id}`);
+        
         if (!response.ok) {
           throw new Error('Artist not found');
         }
@@ -66,31 +68,56 @@ const Artist = () => {
 
     const fetchAlbums = async () => {
       try {
-        const response = await fetch(`https://localhost:7179/api/albums/artist/${id}`);
+        const response = await fetch(`${BASE_URL}/api/albums/artist/${id}`);
         const data = await response.json();
-        const mappedAlbums: Album[] = data.map((album: any) => ({
-          title: album.title,
-          year: album.releaseDate.split('-')[0],
-          image: album.imageUrl,
-        })).slice(0, 5);
-        setAlbums(mappedAlbums);
+        const albumsArray = data.$values || [];
+        if (Array.isArray(albumsArray)) {
+          const mappedAlbums: Album[] = albumsArray.map((album: any) => ({
+            title: album.title,
+            year: album.releaseDate.split('-')[0],
+            image: album.imageUrl,
+          })).slice(0, 5);
+          setAlbums(mappedAlbums);
+        } else {
+          console.error('Albums data is not an array:', data);
+        }
       } catch (error) {
         console.error('Error fetching albums:', error);
       }
     };
-
+    
     const fetchSingles = async () => {
       try {
-        const response = await fetch(`https://localhost:7179/api/artists/${id}/singles`);
+        const response = await fetch(`${BASE_URL}/api/artists/${id}/singles`);
         const data = await response.json();
-        const mappedSingles: Single[] = data.map((single: any) => ({
-          title: single.title,
-          year: single.releaseDate.split('-')[0],
-          image: single.imageUrl,
-        }));
-        setSingles(mappedSingles);
+        const singlesArray = data.$values || [];
+        if (Array.isArray(singlesArray)) {
+          const mappedSingles: Single[] = singlesArray.map((single: any) => ({
+            title: single.title,
+            year: single.releaseDate.split('-')[0],
+            image: single.imageUrl,
+          }));
+          setSingles(mappedSingles);
+        } else {
+          console.error('Singles data is not an array:', data);
+        }
       } catch (error) {
         console.error('Error fetching singles:', error);
+      }
+    };
+    
+    const fetchTracks = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/api/tracks`);
+        const data = await response.json();
+        const tracksArray = data.$values || [];
+        if (Array.isArray(tracksArray)) {
+          setTracks(tracksArray.slice(0, 5));
+        } else {
+          console.error('Tracks data is not an array:', data);
+        }
+      } catch (error) {
+        console.error('Error fetching tracks:', error);
       }
     };
 
@@ -124,15 +151,7 @@ const Artist = () => {
       }
     };
 
-    const fetchTracks = async () => {
-      try {
-        const response = await fetch('https://localhost:7179/api/tracks');
-        const data = await response.json();
-        setTracks(data.slice(0, 5));
-      } catch (error) {
-        console.error('Error fetching tracks:', error);
-      }
-    };
+
 
     fetchArtist();
     fetchAlbums();
@@ -151,19 +170,18 @@ const Artist = () => {
       }
       setIsPlaying(!isPlaying);
     } else {
-      audioRef.current.src = `https://localhost:7179${filePath}`;
+      audioRef.current.src = `${BASE_URL}${filePath}`;
       audioRef.current.play();
       setCurrentTrack(filePath);
       setIsPlaying(true);
-      setTrackEnded(false); // Reset state when a new track is played
+      setTrackEnded(false);
     }
   };
 
-  // Додаємо подію для завершення треку
   useEffect(() => {
     const handleEnded = () => {
       setTrackEnded(true);
-      setIsPlaying(false); // Оскільки трек завершений, зупиняємо програвання
+      setIsPlaying(false); 
     };
 
     const audio = audioRef.current;
@@ -193,7 +211,7 @@ const Artist = () => {
           <div
             className="relative w-[751px] h-[490px] flex-shrink-0 rounded-[20px] mb-8"
             style={{
-              background: `linear-gradient(0deg, rgba(0, 0, 0, 0.30) 0%, rgba(0, 0, 0, 0.30) 100%), url(https://localhost:7179${artist.imageUrl}) lightgray 50% / cover no-repeat`,
+              background: `linear-gradient(0deg, rgba(0, 0, 0, 0.30) 0%, rgba(0, 0, 0, 0.30) 100%), url(${BASE_URL}${artist.imageUrl}) lightgray 50% / cover no-repeat`,
               borderRadius: '20px'
             }}
           >
@@ -209,7 +227,7 @@ const Artist = () => {
             {albums.map((album, index) => (
               <div key={index} className="flex-shrink-0">
                 <img
-                  src={`https://localhost:7179${album.image}`}
+                  src={`${BASE_URL}${album.image}`}
                   alt={album.title}
                   className="w-[125px] h-[125px] rounded-[10px] mb-2"
                   onError={(e) => { e.currentTarget.src = '/images/placeholder.png'; }}
@@ -231,7 +249,7 @@ const Artist = () => {
             {singles.map((single, index) => (
               <div key={index} className="flex-shrink-0">
                 <img
-                  src={`https://localhost:7179${single.image}`}
+                  src={`${BASE_URL}${single.image}`}
                   alt={single.title}
                   className="w-[125px] h-[125px] rounded-[10px] mb-2"
                   onError={(e) => { e.currentTarget.src = '/images/placeholder.png'; }}
@@ -252,7 +270,7 @@ const Artist = () => {
               className={`flex items-center gap-4 p-4 w-[408px] rounded-[10px] ${currentTrack === track.filePath && isPlaying ? 'bg-[rgba(186,214,235,0.65)]' : trackEnded && currentTrack === track.filePath ? 'bg-[rgba(186,214,235,0.20)]' : 'bg-[rgba(186,214,235,0.20)]'}`}
             >
               <span className="text-white">{index + 1}</span>
-              <img src={`https://localhost:7179${track.imageUrl}` || '/images/placeholder.png'} alt={track.title} className="w-[50px] h-[50px] rounded-[10px]" />
+              <img src={`${BASE_URL}${track.imageUrl}` || '/images/placeholder.png'} alt={track.title} className="w-[50px] h-[50px] rounded-[10px]" />
               <span className="text-white flex-grow">{track.title}</span>
               <button onClick={() => handlePlayPause(track.filePath)}>
                 <img

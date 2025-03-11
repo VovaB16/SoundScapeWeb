@@ -1,16 +1,67 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react'; 
+import { useNavigate } from 'react-router-dom';
 import NavigationMenu from './NavigationMenu';
+import { useAuth } from '../../context/AuthContext';
 
 const Header = () => {
   const [isHomeActive, setIsHomeActive] = useState(false);
   const [isNotificationsActive, setIsNotificationsActive] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string>('/images/avatars/frame (1).svg');
+  const [homeIconSrc, setHomeIconSrc] = useState<string>('/images/HomeIcon.svg');
+  const navigate = useNavigate();
+  const authContext = useAuth();
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+  const updateAvatarUrl = (url: string) => {
+    setAvatarUrl(`${BASE_URL}${url}?t=${new Date().getTime()}`);
+  };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/api/user/me`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authContext?.token}`
+          }
+        });
+        if (response.ok) {
+          const data = await response.json();
+
+          if (data.avatarUrl) {
+            updateAvatarUrl(data.avatarUrl);
+          } else {
+            setAvatarUrl('/images/avatars/frame (1).svg');
+          }
+        } else {
+          console.error('Failed to fetch user data:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    if (authContext?.token) {
+      fetchUserData();
+    }
+  }, [authContext, BASE_URL]);
 
   const handleHomeClick = () => {
-    setIsHomeActive(prevState => !prevState);
+    setHomeIconSrc('/images/HomeIcon2.svg');
+    setTimeout(() => {
+      setHomeIconSrc('/images/HomeIcon.svg');
+    }, 200);
+    setIsHomeActive(!isHomeActive);
+    navigate('/main');
   };
 
   const handleNotificationsClick = () => {
     setIsNotificationsActive(prevState => !prevState);
+  };
+
+  const handleProfileClick = () => {
+    navigate('/profile');
   };
 
   return (
@@ -22,7 +73,7 @@ const Header = () => {
               <img src="/images/logos/Logo.svg" alt="SoundScape Logo" className="h-12 flex-shrink-0" />
               <button className="ml-5 flex-shrink-0" onClick={handleHomeClick}>
                 <img
-                  src={isHomeActive ? "/images/HomeIcon2.svg" : "/images/HomeIcon.svg"}
+                  src={homeIconSrc}
                   alt="Home"
                   className="h-12"
                 />
@@ -39,7 +90,7 @@ const Header = () => {
               </div>
             </div>
             <div className="flex items-center pr-[160px] gap-5">
-              <button className="flex items-center justify-center w-[180px] p-3 gap-[12px] rounded-[22px] bg-gradient-to-b from-[#660273] to-[#A305A6] text-white">
+              <button onClick={() => navigate('/premium')} className="flex items-center justify-center w-[180px] p-3 gap-[12px] rounded-[22px] bg-gradient-to-b from-[#660273] to-[#A305A6] text-white">
                 Premium
               </button>
               <button onClick={handleNotificationsClick}>
@@ -49,7 +100,18 @@ const Header = () => {
                   className="h-10"
                 />
               </button>
-              <img src="/images/avatars/frame (1).svg" alt="Avatar" className="h-12 w-12 rounded-full" />
+              <button onClick={handleProfileClick} className="flex items-center justify-center">
+                {avatarUrl && (
+                  <img
+                    src={avatarUrl}
+                    alt="User Avatar"
+                    className="h-13 w-13 rounded-full"
+                    onError={(e) => {
+                      e.currentTarget.src = `${BASE_URL}/images/default-avatar.png`;
+                    }}
+                  />
+                )}
+              </button>
             </div>
           </div>
         </header>
