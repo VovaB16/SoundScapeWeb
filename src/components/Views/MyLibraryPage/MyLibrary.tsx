@@ -157,33 +157,37 @@ const MyLibrary: React.FC = () => {
                 </button>
             </div>
             <div className="playlists">
-                {filteredPlaylists.map((playlist) => (
-                    <div key={playlist.id} className="playlist-item-container">
-                        <button
-                            className="playlist-item"
-                            onClick={() => handlePlaylistClick(playlist.id)}
-                        >
-                            <img
-                                src={playlist.imageUrl ? `${BASE_URL}${playlist.imageUrl}` : `${BASE_URL}/images/playlist-default-icon.svg`}
-                                alt={playlist.name}
-                                className="playlist-image"
-                            />
-                            <div className="playlist-info">
-                                <h2>{playlist.name}</h2>
-                                <div className='playlist-info-sub'>
-                                    <p>Плейлист 2025</p>
+                {filteredPlaylists.length > 0 ? (
+                    filteredPlaylists.map((playlist) => (
+                        <div key={playlist.id} className="playlist-item-container">
+                            <button
+                                className="playlist-item"
+                                onClick={() => handlePlaylistClick(playlist.id)}
+                            >
+                                <img
+                                    src={playlist.imageUrl ? `${BASE_URL}${playlist.imageUrl}` : `${BASE_URL}/images/playlist-default-icon.svg`}
+                                    alt={playlist.name}
+                                    className="playlist-image"
+                                />
+                                <div className="playlist-info">
+                                    <h2>{playlist.name}</h2>
+                                    <div className='playlist-info-sub'>
+                                        <p>Плейлист 2025</p>
+                                    </div>
+                                </div>
+                            </button>
+                            <div className="dropdown">
+                                <button className="dropdown-button">...</button>
+                                <div className="dropdown-content">
+                                    <button onClick={() => handleEdit(playlist)}>Редагувати</button>
+                                    <button onClick={() => handleDelete(playlist.id)}>Видалити</button>
                                 </div>
                             </div>
-                        </button>
-                        <div className="dropdown">
-                            <button className="dropdown-button">...</button>
-                            <div className="dropdown-content">
-                                <button onClick={() => handleEdit(playlist)}>Редагувати</button>
-                                <button onClick={() => handleDelete(playlist.id)}>Видалити</button>
-                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))
+                ) : (
+                    <p className="no-playlists-message">У вас ще немає плейлистів</p>
+                )}
             </div>
             {modalIsOpen && (
                 <div className="modal-overlay">

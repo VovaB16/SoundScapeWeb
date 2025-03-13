@@ -73,8 +73,10 @@ const RegisterStep3 = () => {
             navigate('/login');
         }
     } catch (error) {
+        navigate('/login');
         console.error('Error:', error);
         if (error instanceof Error) {
+            navigate('/login');
             //alert(`Error: ${error.message}`);
         } else {
             alert('An unknown error occurred');

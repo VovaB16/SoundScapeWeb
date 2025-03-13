@@ -63,6 +63,7 @@ const PlaylistPage: React.FC = () => {
     }, [playlist, BASE_URL]);
 
 
+
     const playTrack = (index: number) => {
         if (playlist) {
             const track = playlist.playlistTracks.$values[index].track;
@@ -83,13 +84,13 @@ const PlaylistPage: React.FC = () => {
         }
     };
 
-    const handlePlayPauseTrack = (track: Track) => {
-        const trackIndex = playlist?.playlistTracks.$values.findIndex(pt => pt.track.id === track.id) || 0;
-        setCurrentTrackIndex(trackIndex);
-        setCurrentTrack(track);
-        setIsPlaying(true);
-        setTrackEnded(false);
-    };
+    //const handlePlayPauseTrack = (track: Track) => {
+    //    const trackIndex = playlist?.playlistTracks.$values.findIndex(pt => pt.track.id === track.id) || 0;
+    //    setCurrentTrackIndex(trackIndex);
+    //    setCurrentTrack(track);
+    //    setIsPlaying(true);
+    //    setTrackEnded(false);
+    //};
 
     if (loading) {
         return <div>Loading...</div>;
@@ -161,7 +162,7 @@ const PlaylistPage: React.FC = () => {
                     tracks.map((track, index) => {
                         const trackImage = track.imageUrl ? `${BASE_URL}${track.imageUrl}` : `${BASE_URL}/images/default-track.png`;
                         return (
-                            <div key={track.id} className="track-item" onClick={() => handlePlayPauseTrack(track)}>
+                            <div key={track.id} className="track-item">
                                 <div className="track-number">{index + 1}</div>
                                 <img className="track-image" src={trackImage} alt={track.title} />
                                 <div className="track-info">

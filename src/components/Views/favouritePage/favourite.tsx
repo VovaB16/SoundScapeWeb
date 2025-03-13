@@ -110,7 +110,7 @@ const Favourite: React.FC = () => {
             </div>
             <div>
                 {filteredTracks.length === 0 ? (
-                    <div className="no-tracks-message">
+                    <div className="no-tracks-message1">
                         Ви ще не додали улюблені треки
                     </div>
                 ) : (

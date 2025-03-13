@@ -19,6 +19,13 @@ interface Artist {
     imageUrl: string;
 }
 
+interface Album {
+    title: string;
+    year: string;
+    image: string;
+    artist: string;
+}
+
 const Main = () => {
     const navigate = useNavigate();
     const [topSongs, setTopSongs] = useState<Song[]>([]);
@@ -27,6 +34,7 @@ const Main = () => {
     const [activeAddButtons, setActiveAddButtons] = useState<number[]>([]);
     const [artists, setArtists] = useState<Artist[]>([]);
     const [visibleArtists, setVisibleArtists] = useState<Artist[]>([]);
+    const [albums, setAlbums] = useState<Album[]>([]);
     const BASE_URL = import.meta.env.VITE_API_BASE_URL;
     const artistContainerRef = useRef<HTMLDivElement>(null);
 
@@ -59,14 +67,37 @@ const Main = () => {
                 const response = await axios.get(`${BASE_URL}/api/artists`);
                 const artists = Array.isArray(response.data.$values) ? response.data.$values : [];
                 setArtists(artists);
-                setVisibleArtists(artists.slice(0, 5)); // Show the first 5 artists initially
+                setVisibleArtists(artists.slice(0, 5));
             } catch (error) {
                 console.error('Error fetching artists:', error);
             }
         };
 
+        const fetchAlbums = async () => {
+            try {
+                const response = await fetch(`${BASE_URL}/api/albums/artist/25`);
+                const data = await response.json();
+                const albumsArray = data.$values || [];
+                if (Array.isArray(albumsArray)) {
+                    const mappedAlbums: Album[] = albumsArray.map((album: any) => ({
+                        title: album.title,
+                        year: album.releaseDate.split('-')[0],
+                        image: album.imageUrl,
+                        artist: album.artistName, 
+                        
+                    })).slice(0, 5);
+                    setAlbums(mappedAlbums);
+                } else {
+                    console.error('Albums data is not an array:', data);
+                }
+            } catch (error) {
+                console.error('Error fetching albums:', error);
+            }
+        };
+
         fetchTopSongs();
         fetchArtists();
+        fetchAlbums(); 
     }, []);
 
     const addToFavorites = async (songId: number) => {
@@ -74,7 +105,7 @@ const Main = () => {
             alert('This track is already in your favorites.');
             return;
         }
-    
+
         try {
             const token = localStorage.getItem('authToken');
             await axios.post(`${BASE_URL}/api/favorites/add/${songId}`, {}, {
@@ -222,36 +253,17 @@ const Main = () => {
                 <div className="block_best-world-albums">
                     <h2 className="title">Найкращі світові альбоми</h2>
                     <div className="row">
-                        <div className="item">
-                            <div className="image-container">
-                                <img src="/images/album-example-icon.png" />
+                        {albums.slice(0, 4).map((album, index) => (
+                            <div key={index} className="item">
+                                <div className="image-container">
+                                    <img src={`${BASE_URL}${album.image}`} alt={album.title} />
+                                </div>
+                                <p className="name-album-main">{album.title}</p>
                             </div>
-                            <p className="name-album">Short n’ Sweet</p>
-                            <p className="name-artist">Sabrina Carpenter</p>
-                        </div>
-                        <div className="item">
-                            <div className="image-container">
-                                <img src="/images/album-example-icon.png" />
-                            </div>
-                            <p className="name-album">Short n’ Sweet</p>
-                            <p className="name-artist">Sabrina Carpenter</p>
-                        </div>
-                        <div className="item">
-                            <div className="image-container">
-                                <img src="/images/album-example-icon.png" />
-                            </div>
-                            <p className="name-album">Short n’ Sweet</p>
-                            <p className="name-artist">Sabrina Carpenter</p>
-                        </div>
-                        <div className="item">
-                            <div className="image-container">
-                                <img src="/images/album-example-icon.png" />
-                            </div>
-                            <p className="name-album">Short n’ Sweet</p>
-                            <p className="name-artist">Sabrina Carpenter</p>
-                        </div>
+                        ))}
                     </div>
                 </div>
+
             </div>
         </div>
     );

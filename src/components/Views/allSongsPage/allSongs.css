@@ -109,3 +109,7 @@
     border-radius: 20px;
     border: 1px solid var(--Text, #FFF);
 }
+
+.track-image-songs{
+    border-radius: 5px;
+}

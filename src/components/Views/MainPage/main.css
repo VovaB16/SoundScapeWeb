@@ -15,7 +15,15 @@
 .image-container {
     width: 150px;
     height: 150px;
-    border-radius: 8px;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    border-radius: 20px; 
 }
 
 .nav-main .lists {
@@ -295,6 +303,34 @@ ul li::before {
     margin: 64px 0;
 }
 
+.name-album-main {
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    word-wrap: break-word;
+    word-break: break-word; 
+    white-space: pre-wrap; 
+    max-width: 100%; 
+    display: block;
+    width: calc(30ch + 1px);
+    max-width: 100%;
+}
+
+
+.block_best-world-albums .row .item .image-container {
+    width: 300px; 
+    height: 300px; 
+    overflow: hidden; 
+}
+
+.block_best-world-albums .row .item .image-container img {
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+}
+
+
+
 .block_best-world-albums .title {
     color: #FFF;
     font-family: "Noto Sans";
@@ -307,29 +343,45 @@ ul li::before {
 
 .block_best-world-albums .row {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 16px;
+    max-width: 1500px;
+    margin: 0 auto;
+    width: 100%;
 }
 
-.block_best-world-albums .item .name-album {
-    color: #FFF;
+.block_best-world-albums .row .item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
     text-align: center;
-    font-family: "Noto Sans";
-    font-size: 32px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    font-variant: all-small-caps;
+    width: 300px;
 }
 
-.block_best-world-albums .item .name-artist {
+.block_best-world-albums .row .item .image-container {
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+}
+
+.block_best-world-albums .row .item .image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.block_best-world-albums .row .item .name-album-main {
+    font-size: 24px;
+    font-weight: bold;
     color: #FFF;
     text-align: center;
-    font-family: "Noto Sans";
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
+    margin-top: 10px;
 }
+
+
+
 
 /* block mv */
 .block_mv .title {

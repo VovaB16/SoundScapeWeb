@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Link, useParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import './Artist.css';
+import TrackPlayer from '../TrackPlayer/TrackPlayer'; 
+
 interface Album {
   title: string;
   year: string;
@@ -46,7 +48,6 @@ const Artist = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [trackEnded, setTrackEnded] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
-  //const [isLoadingStatus, setIsLoadingStatus] = useState(true);
   const { token } = useAuth();
   const audioRef = useRef(new Audio());
 
@@ -68,11 +69,12 @@ const Artist = () => {
         console.error('Error fetching artist:', error);
         setArtist(null);
       }
+
     };
 
     const fetchAlbums = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/api/albums/artist/${id}`);
+        const response = await fetch(`${BASE_URL}/api/albums/artist/25`);
         const data = await response.json();
         const albumsArray = data.$values || [];
         if (Array.isArray(albumsArray)) {
@@ -92,7 +94,7 @@ const Artist = () => {
 
     const fetchSingles = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/api/artists/${id}/singles`);
+        const response = await fetch(`${BASE_URL}/api/artists/25/singles`);
         const data = await response.json();
         const singlesArray = data.$values || [];
         if (Array.isArray(singlesArray)) {
@@ -115,8 +117,9 @@ const Artist = () => {
         const response = await fetch(`${BASE_URL}/api/tracks`);
         const data = await response.json();
         const tracksArray = data.$values || [];
+        console.log('Tracks Data:', data);
         if (Array.isArray(tracksArray)) {
-          setTracks(tracksArray.slice(0, 5));
+          setTracks(tracksArray);
         } else {
           console.error('Tracks data is not an array:', data);
         }
@@ -157,7 +160,7 @@ const Artist = () => {
           }
         );
 
-        console.log('Concerts response:', response.data);
+        //console.log('Concerts response:', response.data);
 
         const events = response.data._embedded?.events || [];
         const mappedConcerts = events.map((event: any) => ({
@@ -181,6 +184,7 @@ const Artist = () => {
     setLoading(false);
   }, [id]);
 
+
   const handlePlayPause = (filePath: string) => {
     if (currentTrack === filePath) {
       if (isPlaying) {
@@ -190,6 +194,7 @@ const Artist = () => {
       }
       setIsPlaying(!isPlaying);
     } else {
+      audioRef.current.pause(); 
       audioRef.current.src = `${BASE_URL}${filePath}`;
       audioRef.current.play();
       setCurrentTrack(filePath);
@@ -197,18 +202,38 @@ const Artist = () => {
       setTrackEnded(false);
     }
   };
-
+  
   useEffect(() => {
     const handleEnded = () => {
-      setTrackEnded(true);
-      setIsPlaying(false);
+      const currentIndex = tracks.findIndex((track) => track.filePath === currentTrack);
+      const nextIndex = (currentIndex + 1) % tracks.length; 
+  
+      setCurrentTrack(tracks[nextIndex]?.filePath);
+      setIsPlaying(true);
+      setTrackEnded(false);
+      audioRef.current.src = `${BASE_URL}${tracks[nextIndex]?.filePath}`;
+      audioRef.current.play();
+    };
+  
+    audioRef.current.addEventListener('ended', handleEnded);
+  
+    return () => {
+      audioRef.current.removeEventListener('ended', handleEnded);
+      audioRef.current.pause();
+    };
+  }, [tracks, currentTrack]);
+  
+  
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      audioRef.current.pause();
     };
 
-    const audio = audioRef.current;
-    audio.addEventListener('ended', handleEnded);
+    window.addEventListener('beforeunload', handleBeforeUnload);
 
     return () => {
-      audio.removeEventListener('ended', handleEnded);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);
 
@@ -229,9 +254,9 @@ const Artist = () => {
       console.error("Немає токена, не можна підписатися");
       return;
     }
-  
+
     setLoading(true);
-  
+
     try {
       if (isSubscribed) {
         await axios.delete(
@@ -249,7 +274,7 @@ const Artist = () => {
           }
         );
       }
-  
+
       setIsSubscribed((prev) => !prev);
     } catch (error) {
       console.error("Помилка підписки:", error);
@@ -275,85 +300,173 @@ const Artist = () => {
               {artist.name}
             </div>
             <button
-            onClick={handleSubscription}
-            className={`subscribe-button-artist ${isSubscribed ? "subscribed" : ""} ${loading ? "disabled" : ""}`}
-            disabled={loading}
-          >
-            {loading ? "Зачекайте..." : isSubscribed ? "Відписатися" : "Підписатися"}
-          </button>
+              onClick={handleSubscription}
+              className={`subscribe-button-artist ${isSubscribed ? "subscribed" : ""} ${loading ? "disabled" : ""}`}
+              disabled={loading}
+            >
+              {loading ? "Зачекайте..." : isSubscribed ? "Відписатися" : "Підписатися"}
+            </button>
           </div>
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold">Альбоми</h2>
+            <h3 className="text-2xl font-bold">Альбоми</h3>
             <Link to="/albums" className="text-gray-500">Показати всі</Link>
           </div>
-          <div className="flex gap-8 max-w-[751px] mb-8">
-            {albums.map((album, index) => (
-              <div key={index} className="flex-shrink-0">
-                <img
-                  src={`${BASE_URL}${album.image}`}
-                  alt={album.title}
-                  className="w-[125px] h-[125px] rounded-[10px] mb-2"
-                  onError={(e) => { e.currentTarget.src = '/images/placeholder.png'; }}
-                />
-                <div className="text-white text-center">
-                  <p className="font-bold uppercase truncate" style={{ maxWidth: '125px', whiteSpace: 'normal', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
-                    {album.title}
-                  </p>
-                  <p>{album.year}</p>
+
+          <div className="grid grid-cols-5 gap-4 max-w-[751px] mb-8">
+            {albums.length > 0
+              ? albums.slice(0, 5).map((album, index) => (
+                <div key={index} className="flex flex-col items-center">
+                  <img
+                    src={`${BASE_URL}${album.image}`}
+                    alt={album.title}
+                    className="w-[125px] h-[125px] rounded-[10px] mb-2"
+                    onError={(e) => { e.currentTarget.src = '/images/placeholder.png'; }}
+                  />
+                  <div className="text-white text-center">
+                    <p className="font-bold uppercase truncate"
+                      style={{
+                        maxWidth: '125px',
+                        whiteSpace: 'normal',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical'
+                      }}>
+                      {album.title}
+                    </p>
+                    <p>{album.year}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+              : <p className="text-gray-500 col-span-5 text-center">Немає альбомів</p>
+            }
           </div>
+
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold">Сингли</h2>
+            <h3 className="text-2xl font-bold">Сингли</h3>
             <Link to="/singles" className="text-gray-500">Показати всі</Link>
           </div>
-          <div className="flex gap-8 max-w-[751px]">
-            {singles.map((single, index) => (
-              <div key={index} className="flex-shrink-0">
-                <img
-                  src={`${BASE_URL}${single.image}`}
-                  alt={single.title}
-                  className="w-[125px] h-[125px] rounded-[10px] mb-2"
-                  onError={(e) => { e.currentTarget.src = '/images/placeholder.png'; }}
-                />
-                <div className="text-white text-center">
-                  <p className="font-bold">{single.title}</p>
-                  <p>{single.year}</p>
+
+          <div className="grid grid-cols-5 gap-4 max-w-[751px]">
+            {singles.length > 0
+              ? singles.slice(0, 5).map((single, index) => (
+                <div key={index} className="flex flex-col items-center">
+                  <img
+                    src={`${BASE_URL}${single.image}`}
+                    alt={single.title}
+                    className="w-[125px] h-[125px] rounded-[10px] mb-2"
+                    onError={(e) => { e.currentTarget.src = '/images/placeholder.png'; }}
+                  />
+                  <div className="text-white text-center">
+                    <p className="font-bold uppercase truncate"
+                      style={{
+                        maxWidth: '125px',
+                        whiteSpace: 'normal',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical'
+                      }}>
+                      {single.title}
+                    </p>
+                    <p>{single.year}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+              : <p className="text-gray-500 col-span-5 text-center">Немає синглів</p>
+            }
           </div>
+
         </div>
         <div className="flex flex-col justify-center items-center gap-4 p-4 rounded-[10px]">
-          <h2 className="text-2xl font-bold mb-4 self-start">Популярні</h2>
-          {tracks.map((track, index) => (
-            <div
-              key={track.id}
-              className={`flex items-center gap-4 p-4 w-[408px] rounded-[10px] ${currentTrack === track.filePath && isPlaying ? 'bg-[rgba(186,214,235,0.65)]' : trackEnded && currentTrack === track.filePath ? 'bg-[rgba(186,214,235,0.20)]' : 'bg-[rgba(186,214,235,0.20)]'}`}
-            >
-              <span className="text-white">{index + 1}</span>
-              <img src={`${BASE_URL}${track.imageUrl}` || '/images/placeholder.png'} alt={track.title} className="w-[50px] h-[50px] rounded-[10px]" />
-              <span className="text-white flex-grow">{track.title}</span>
-              <button onClick={() => handlePlayPause(track.filePath)}>
-                <img
-                  src={currentTrack === track.filePath && isPlaying ? '/images/PauseIcon.svg' : trackEnded && currentTrack === track.filePath ? '/images/PlayIcon.svg' : '/images/PlayIcon.svg'}
-                  alt={isPlaying ? 'Pause' : trackEnded ? 'Stopped' : 'Play'}
-                  className="w-[34px] h-[34px]"
-                />
-              </button>
-              <button>
-                <img src={'/images/AddCircle.svg'} alt={'Add to playlist'} className="w-[24px] h-[24px]" />
-              </button>
-              <button className="flex items-center gap-0.5">
-                <img src={'/images/Container.svg'} alt={'.'} className="w-[4px] h-[4px]" />
-                <img src={'/images/Container.svg'} alt={'.'} className="w-[4px] h-[4px]" />
-                <img src={'/images/Container.svg'} alt={'.'} className="w-[4px] h-[4px]" />
-              </button>
-            </div>
-          ))}
-          <h2 className="text-2xl font-bold mb-4 mt-16 self-start">Концерти</h2>
-          <div className="flex flex-col gap-4">
+          <h3 className="text-2xl font-bold mb-4 self-start">Популярні</h3>
+
+
+          {tracks
+            .filter(track => track.artist.trim().toLowerCase() === artist.name.trim().toLowerCase())
+            .slice(0, 5)
+            .map((track, index) => {
+              return (
+                <div
+                  key={track.id}
+                  className={`flex items-center gap-4 p-4 w-[408px] rounded-[10px] ${currentTrack === track.filePath && isPlaying
+                      ? 'bg-[rgba(186,214,235,0.65)]'
+                      : trackEnded && currentTrack === track.filePath
+                        ? 'bg-[rgba(186,214,235,0.20)]'
+                        : 'bg-[rgba(186,214,235,0.20)]'
+                    }`}
+                >
+                  <span className="text-white">{index + 1}</span>
+                  <img
+                    src={`${BASE_URL}${track.imageUrl}` || '/images/placeholder.png'}
+                    alt={track.title}
+                    className="w-[50px] h-[50px] rounded-[10px]"
+                  />
+                  <span
+                    className="text-white flex-grow truncate max-w-[150px]"
+                    style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                  >
+                    {track.title}
+                  </span>
+
+                  <button onClick={() => handlePlayPause(track.filePath)}>
+                    <img
+                      src={
+                        currentTrack === track.filePath && isPlaying
+                          ? '/images/PauseIcon.svg'
+                          : trackEnded && currentTrack === track.filePath
+                            ? '/images/PlayIcon.svg'
+                            : '/images/PlayIcon.svg'
+                      }
+                      alt={isPlaying ? 'Pause' : trackEnded ? 'Stopped' : 'Play'}
+                      className="w-[34px] h-[34px]"
+                    />
+                  </button>
+                  <button>
+                    <img src={'/images/AddCircle.svg'} alt={'Add to playlist'} className="w-[24px] h-[24px]" />
+                  </button>
+                  <button className="flex items-center gap-0.5">
+                    <img src={'/images/Container.svg'} alt={'.'} className="w-[4px] h-[4px]" />
+                    <img src={'/images/Container.svg'} alt={'.'} className="w-[4px] h-[4px]" />
+                    <img src={'/images/Container.svg'} alt={'.'} className="w-[4px] h-[4px]" />
+                  </button>
+                </div>
+              );
+            })
+          }
+
+          {currentTrack && (
+            <TrackPlayer
+              track={`${BASE_URL}${currentTrack}`}
+              trackTitle={tracks.find(track => track.filePath === currentTrack)?.title || ''}
+              trackArtist={tracks.find(track => track.filePath === currentTrack)?.artist || ''}
+              trackCover={tracks.find(track => track.filePath === currentTrack)?.imageUrl || '/images/placeholder.png'}
+              isPlaying={isPlaying}
+              onPlayPause={() => setIsPlaying(!isPlaying)}
+              onTrackEnd={() => setTrackEnded(true)}
+              onPreviousTrack={() => {
+                const currentIndex = tracks.findIndex(track => track.filePath === currentTrack);
+                if (currentIndex > 0) {
+                  const previousTrack = tracks[currentIndex - 1];
+                  setCurrentTrack(previousTrack.filePath);
+                  setIsPlaying(true);
+                }
+              }}
+              onNextTrack={() => {
+                const currentIndex = tracks.findIndex(track => track.filePath === currentTrack);
+                if (currentIndex < tracks.length - 1) {
+                  const nextTrack = tracks[currentIndex + 1];
+                  setCurrentTrack(nextTrack.filePath);
+                  setIsPlaying(true);
+                }
+              }}
+            />
+          )}
+
+          <h3 className="text-2xl font-bold mb-4 mt-16 self-start w-full">Концерти</h3>
+          <div className="flex flex-col gap-4 w-full">
             {concerts.length > 0 ? (
               concerts.map((concert) => {
                 const date = new Date(concert.date);
