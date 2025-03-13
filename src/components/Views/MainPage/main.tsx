@@ -25,216 +25,72 @@ const Main = () => {
         const fetchTopSongs = async () => {
             try {
                 const response = await axios.get(`${BASE_URL}/api/tracks`);
-                const songs = Array.isArray(response.data.$values) ? response.data.$values : [];
-                const updatedSongs = songs.slice(0, 10).map((song: { imageUrl: any; }) => ({
+                
+                // Указываем тип явно
+                const songs: Song[] = Array.isArray(response.data.$values) ? response.data.$values : [];
+        
+                const updatedSongs = songs.slice(0, 10).map((song: Song) => ({ 
                     ...song,
                     imageUrl: `${BASE_URL}${song.imageUrl}`
                 }));
+        
                 setTopSongs(updatedSongs);
-
-                updatedSongs.forEach((song: { filePath: any; id: any; }) => {
-                    const audio = new Audio(`${BASE_URL}${song.filePath}`);
-                    audio.addEventListener('loadedmetadata', () => {
-                        const minutes = Math.floor(audio.duration / 60);
-                        const seconds = Math.floor(audio.duration % 60).toString().padStart(2, '0');
-                        setDurations(prev => ({ ...prev, [song.id]: `${minutes}:${seconds}` }));
-                    });
-                });
             } catch (error) {
                 console.error('Error fetching top songs:', error);
             }
         };
+        
 
         fetchTopSongs();
     }, []);
 
-    const addToFavorites = async (songId: number) => {
-        if (favorites.includes(songId)) {
-            alert('This track is already in your favorites.');
-            return;
-        }
-    
-        try {
-            const token = localStorage.getItem('authToken');
-            await axios.post(`${BASE_URL}/api/favorites/add/${songId}`, {}, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            setFavorites(prev => [...prev, songId]);
-            setActiveAddButtons(prev => [...prev, songId]);
-            setTimeout(() => {
-                setActiveAddButtons(prev => prev.filter(id => id !== songId));
-            }, 200);
-        } catch (error) {
-            console.error('Error adding to favorites:', error);
-        }
-    };
+    const popularArtists = [
+        "Taylor Swift",
+        "The Weeknd",
+        "Bad Bunny",
+        "Drake",
+        "Billie Eilish"
+    ];
 
     return (
         <div className="main">
-
             <div className="container">
                 <div className="block_day-recomendation">
-                    <div className="content">
-                        <h1>Arctic Monkeys</h1>
-                        <div className="row">
-                            <div className="item">
-                                <img src="images/home_page_images/music_icon.png" alt="songImage" />
-                            </div>
-                            <div className="item">
-                                <div className="under-title">
-                                    <img src="/images/home_page_images/ellipse-8.png" alt="" />
-                                    <p>Рекомендація дня</p>
-                                </div>
-                                <div className="song-name">
-                                    <p className="name">I Wanna Be Yours</p>
-                                    <button type="button" className="btn" id="share">
-                                        <img src="/images/home_page_images/share_icon.png" alt="Share" />
-                                    </button>
-                                </div>
-                                <div className="controls">
-                                    <button type="button" className="btn" id="play">
-                                        <img src="/images/home_page_images/player_icon.png" alt="play" />
-                                    </button>
-                                    <button type="button" className="btn" id="add">
-                                        <img src="/images/home_page_images/add_icon.png" alt="add" />
-                                    </button>
-                                    <button type="button" className="btn" id="more">
-                                        <img src="/images/home_page_images/more_icon.png" alt="more" />
-                                    </button>
-                                </div>
-                            </div>
-                            <div className="item">
-                                <p className="artist-information">
-                                    With their nervy and literate indie rock sound, Arctic Monkeys are a respected, adventurous, and successful group that could easily be called Britain's biggest band of the early 21st century.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                    <h1>Arctic Monkeys</h1>
+                    <p>Рекомендація дня: I Wanna Be Yours</p>
                 </div>
+
                 <div className="block_popular-artists">
-                    <h2 className="title">Популярні виконавці</h2>
-                    <div className="container">
-                        <button className="control_item">
-                            <img src="/images/home_page_images/arrow_left.png" alt="arrow" />
-                        </button>
-
-                        <div className="row">
-                            <div className="item">
-                                <div className="image-container">
-                                    <img src="/images/artist-example-icon.png" />
-                                </div>
-                                <p>Bad Bunny</p>
+                    <h2>Популярні виконавці</h2>
+                    <div className="row">
+                        {popularArtists.map(artist => (
+                            <div key={artist} className="item">
+                                <p>{artist}</p>
                             </div>
-                            <div className="item">
-                                <div className="image-container">
-                                    <img src="/images/artist-example-icon.png" />
-                                </div>
-                                <p>Bad Bunny</p>
-                            </div>
-                            <div className="item">
-                                <div className="image-container">
-                                    <img src="/images/artist-example-icon.png" />
-                                </div>
-                                <p>Bad Bunny</p>
-                            </div>
-                            <div className="item">
-                                <div className="image-container">
-                                    <img src="/images/artist-example-icon.png" />
-                                </div>
-                                <p>Bad Bunny</p>
-                            </div>
-                            <div className="item">
-                                <div className="image-container">
-                                    <img src="/images/artist-example-icon.png" />
-                                </div>
-                                <p>Bad Bunny</p>
-                            </div>
-                        </div>
-
-                        <button className="control_item">
-                            <img src="/images/home_page_images/arrow_right.png" alt="arrow" />
-                        </button>
+                        ))}
                     </div>
                 </div>
+
                 <div className="block_top10">
-                    <div className="header-main-page">
-                        <h2 className="title">TOP 10</h2>
-                        <button className="btn-all-song" onClick={() => navigate('/all-songs')}>
-                            Показати всі
-                        </button>
-                    </div>
-
-                    <div className="column">
-                        <ul>
-                            {topSongs.map((song, index) => (
-                                <li key={index} className="item">
-                                    <div>
-                                        <div className="image-container">
-                                            <img src={song.imageUrl} alt={song.title} />
-                                        </div>
-                                        <div className="text">
-                                            <p className="name-song">{song.title}</p>
-                                            <p className="name-artist">{song.artist}</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="controls">
-                                        <button
-                                            type="button"
-                                            className="btn"
-                                            id="add"
-                                            onClick={() => addToFavorites(song.id)}
-                                        >
-                                            <img
-                                                className='add-icon-image-main'
-                                                src={activeAddButtons.includes(song.id) ? '/images/add-icon-active.svg' : '/images/home_page_images/add_icon.png'}
-                                                alt="add"
-                                            />
-                                        </button>
-                                        <p className="time">{durations[song.id] || 'Loading...'}</p>
-                                        <button type="button" className="btn" id="more">
-                                            <img src="/images/home_page_images/more_icon.png" alt="more" />
-                                        </button>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+                    <h2>TOP 10</h2>
+                    <ul>
+                        {topSongs.map(song => (
+                            <li key={song.id}>
+                                <img src={song.imageUrl} alt={song.title} />
+                                <p>{song.title} - {song.artist}</p>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
 
                 <div className="block_best-world-albums">
-                    <h2 className="title">Найкращі світові альбоми</h2>
+                    <h2>Найкращі світові альбоми</h2>
                     <div className="row">
-                        <div className="item">
-                            <div className="image-container">
-                                <img src="/images/album-example-icon.png" />
+                        {["The Tortured Poets Department - Taylor Swift", "Hit Me Hard and Soft - Billie Eilish", "Short n' Sweet - Sabrina Carpenter", "Mañana Será Bonito - Karol G"].map(album => (
+                            <div key={album} className="item">
+                                <p>{album}</p>
                             </div>
-                            <p className="name-album">Short n’ Sweet</p>
-                            <p className="name-artist">Sabrina Carpenter</p>
-                        </div>
-                        <div className="item">
-                            <div className="image-container">
-                                <img src="/images/album-example-icon.png" />
-                            </div>
-                            <p className="name-album">Short n’ Sweet</p>
-                            <p className="name-artist">Sabrina Carpenter</p>
-                        </div>
-                        <div className="item">
-                            <div className="image-container">
-                                <img src="/images/album-example-icon.png" />
-                            </div>
-                            <p className="name-album">Short n’ Sweet</p>
-                            <p className="name-artist">Sabrina Carpenter</p>
-                        </div>
-                        <div className="item">
-                            <div className="image-container">
-                                <img src="/images/album-example-icon.png" />
-                            </div>
-                            <p className="name-album">Short n’ Sweet</p>
-                            <p className="name-artist">Sabrina Carpenter</p>
-                        </div>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -243,4 +99,3 @@ const Main = () => {
 };
 
 export default Main;
-
