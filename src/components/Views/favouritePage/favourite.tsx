@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import TrackPlayer from '../TrackPlayer/TrackPlayer';
 import './favourite.css';
 
 const Favourite: React.FC = () => {
@@ -10,7 +11,6 @@ const Favourite: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState<string>('');
     const authContext = useAuth();
     const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-    const audioRef = useRef<HTMLAudioElement>(null);
 
     useEffect(() => {
         const fetchFavorites = async () => {
@@ -24,7 +24,6 @@ const Favourite: React.FC = () => {
                 });
                 if (response.ok) {
                     const data = await response.json();
-                    //console.log('Fetched data:', data); 
                     if (data.$values && Array.isArray(data.$values)) {
                         const tracksWithYear = data.$values.map((track: any) => ({
                             ...track,
@@ -49,20 +48,29 @@ const Favourite: React.FC = () => {
 
     const handlePlayPause = (filePath: string) => {
         if (currentTrack === filePath) {
-            if (isPlaying) {
-                audioRef.current?.pause();
-            } else {
-                audioRef.current?.play();
-            }
             setIsPlaying(!isPlaying);
         } else {
-            if (audioRef.current) {
-                audioRef.current.src = `${BASE_URL}${filePath}`;
-                audioRef.current.play();
-            }
             setCurrentTrack(filePath);
             setIsPlaying(true);
             setTrackEnded(false);
+        }
+    };
+
+    const handlePreviousTrack = () => {
+        const currentIndex = filteredTracks.findIndex(track => track.filePath === currentTrack);
+        if (currentIndex > 0) {
+            const previousTrack = filteredTracks[currentIndex - 1];
+            setCurrentTrack(previousTrack.filePath);
+            setIsPlaying(true);
+        }
+    };
+
+    const handleNextTrack = () => {
+        const currentIndex = filteredTracks.findIndex(track => track.filePath === currentTrack);
+        if (currentIndex < filteredTracks.length - 1) {
+            const nextTrack = filteredTracks[currentIndex + 1];
+            setCurrentTrack(nextTrack.filePath);
+            setIsPlaying(true);
         }
     };
 
@@ -85,31 +93,12 @@ const Favourite: React.FC = () => {
         }
     };
 
-    useEffect(() => {
-        const handleEnded = () => {
-            setTrackEnded(true);
-            setIsPlaying(false);
-        };
-
-        const audio = audioRef.current;
-        if (audio) {
-            audio.addEventListener('ended', handleEnded);
-        }
-
-        return () => {
-            if (audio) {
-                audio.removeEventListener('ended', handleEnded);
-            }
-        };
-    }, []);
-
     const filteredTracks = tracks.filter(track =>
         track.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     return (
         <div className="favourite-container">
-            <audio ref={audioRef} />
             <div className="search-input-container">
                 <input
                     type="text"
@@ -121,7 +110,7 @@ const Favourite: React.FC = () => {
             </div>
             <div>
                 {filteredTracks.length === 0 ? (
-                    <div className="no-tracks-message">
+                    <div className="no-tracks-message1">
                         Ви ще не додали улюблені треки
                     </div>
                 ) : (
@@ -153,6 +142,19 @@ const Favourite: React.FC = () => {
                     ))
                 )}
             </div>
+            {currentTrack && (
+                <TrackPlayer
+                    track={`${BASE_URL}${currentTrack}`}
+                    trackTitle={tracks.find(track => track.filePath === currentTrack)?.title || ''}
+                    trackArtist={tracks.find(track => track.filePath === currentTrack)?.artist || ''}
+                    trackCover={tracks.find(track => track.filePath === currentTrack)?.imageUrl || '/images/placeholder.png'}
+                    isPlaying={isPlaying}
+                    onPlayPause={() => setIsPlaying(!isPlaying)}
+                    onTrackEnd={() => setTrackEnded(true)}
+                    onPreviousTrack={handlePreviousTrack}
+                    onNextTrack={handleNextTrack}
+                />
+            )}
         </div>
     );
 };

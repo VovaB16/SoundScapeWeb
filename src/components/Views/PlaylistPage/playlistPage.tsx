@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useRef } from 'react';  
+import React, { useEffect, useState } from 'react';  
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './PlaylistPage.css';
+import TrackPlayer from '../TrackPlayer/TrackPlayer'; 
 
 interface Track {
     id: string;
@@ -29,14 +30,14 @@ const PlaylistPage: React.FC = () => {
     const [, setDurations] = useState<{ [key: string]: string }>({});
     const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(0);
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
-    const audioRef = useRef<HTMLAudioElement | null>(null);
+    const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
+    const [, setTrackEnded] = useState<boolean>(false);
     const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
     useEffect(() => {
         const fetchPlaylist = async () => {
             try {
                 const response = await axios.get(`${BASE_URL}/api/playlists/${id}`);
-                //console.log('Fetched playlist:', response.data);
                 setPlaylist(response.data);
             } catch (err) {
                 setError('Failed to fetch playlist');
@@ -61,37 +62,13 @@ const PlaylistPage: React.FC = () => {
         }
     }, [playlist, BASE_URL]);
 
-    useEffect(() => {
-        if (audioRef.current) {
-            audioRef.current.addEventListener('ended', handleTrackEnd);
-        }
-        return () => {
-            if (audioRef.current) {
-                audioRef.current.removeEventListener('ended', handleTrackEnd);
-            }
-        };
-    }, [currentTrackIndex]);
 
-    const handleTrackEnd = () => {
-        if (playlist) {
-            const nextTrackIndex = currentTrackIndex + 1;
-            if (nextTrackIndex < playlist.playlistTracks.$values.length) {
-                setCurrentTrackIndex(nextTrackIndex);
-                playTrack(nextTrackIndex);
-            } else {
-                setIsPlaying(false);
-            }
-        }
-    };
 
     const playTrack = (index: number) => {
         if (playlist) {
             const track = playlist.playlistTracks.$values[index].track;
-            if (audioRef.current) {
-                audioRef.current.src = `${BASE_URL}${track.filePath}`;
-                audioRef.current.play();
-                setIsPlaying(true);
-            }
+            setCurrentTrack(track);
+            setIsPlaying(true);
         }
     };
 
@@ -101,12 +78,19 @@ const PlaylistPage: React.FC = () => {
 
     const handlePlayPause = () => {
         if (isPlaying) {
-            audioRef.current?.pause();
             setIsPlaying(false);
         } else {
             playTrack(currentTrackIndex);
         }
     };
+
+    //const handlePlayPauseTrack = (track: Track) => {
+    //    const trackIndex = playlist?.playlistTracks.$values.findIndex(pt => pt.track.id === track.id) || 0;
+    //    setCurrentTrackIndex(trackIndex);
+    //    setCurrentTrack(track);
+    //    setIsPlaying(true);
+    //    setTrackEnded(false);
+    //};
 
     if (loading) {
         return <div>Loading...</div>;
@@ -123,10 +107,6 @@ const PlaylistPage: React.FC = () => {
     const tracks = playlist.playlistTracks?.$values.map(pt => pt.track) || [];
 
     const playlistImageUrl = playlist.imageUrl ? `${BASE_URL}${playlist.imageUrl}` : `${BASE_URL}/images/playlist-default-icon.svg`;
-    //console.log(`Playlist image URL: ${playlistImageUrl}`);
-    //console.log(`Playlist image: ${playlist.imageUrl}`);
-
-
 
     const handleDeleteTrack = async (trackId: string) => {
         try {
@@ -141,13 +121,13 @@ const PlaylistPage: React.FC = () => {
             console.error('Failed to delete track');
         }
     };
+
     const toggleDeleteIcons = () => {
         setShowDeleteIcons(prev => !prev);
     };
 
     return (
         <div className="playlist-container">
-            <audio ref={audioRef} />
             <div className="playlist-header">
                 <img
                     className="playlist-image-page"
@@ -181,7 +161,6 @@ const PlaylistPage: React.FC = () => {
                 {tracks.length > 0 ? (
                     tracks.map((track, index) => {
                         const trackImage = track.imageUrl ? `${BASE_URL}${track.imageUrl}` : `${BASE_URL}/images/default-track.png`;
-                        //console.log(`Track ${index + 1} image URL: ${trackImage}`);
                         return (
                             <div key={track.id} className="track-item">
                                 <div className="track-number">{index + 1}</div>
@@ -192,8 +171,8 @@ const PlaylistPage: React.FC = () => {
                                 </div>
                                 {showDeleteIcons && (
                                     <button className="delete-icon-playlist" onClick={() => handleDeleteTrack(track.id)}>
-                                    <img src="/images/deleteIcon.svg" alt="Delete" />
-                                </button>
+                                        <img src="/images/deleteIcon.svg" alt="Delete" />
+                                    </button>
                                 )}
                             </div>
                         );
@@ -202,6 +181,33 @@ const PlaylistPage: React.FC = () => {
                     <div>Немає треків</div>
                 )}
             </div>
+            {currentTrack && (
+                <TrackPlayer
+                    track={`${BASE_URL}${currentTrack.filePath}`}
+                    trackTitle={currentTrack.title}
+                    trackArtist={currentTrack.artist}
+                    trackCover={currentTrack.imageUrl || '/images/placeholder.png'}
+                    isPlaying={isPlaying}
+                    onPlayPause={() => setIsPlaying(!isPlaying)}
+                    onTrackEnd={() => setTrackEnded(true)}
+                    onPreviousTrack={() => {
+                        if (currentTrackIndex > 0) {
+                            setCurrentTrackIndex(currentTrackIndex - 1);
+                            playTrack(currentTrackIndex - 1);
+                        }
+                    }}
+                    onNextTrack={() => {
+                        if (currentTrackIndex < tracks.length - 1) {
+                            setCurrentTrackIndex(currentTrackIndex + 1);
+                            playTrack(currentTrackIndex + 1);
+                        } else {
+                            // Loop back to the first track
+                            setCurrentTrackIndex(0);
+                            playTrack(0);
+                        }
+                    }}
+                />
+            )}
         </div>
     );
 };
