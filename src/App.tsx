@@ -27,6 +27,7 @@ import AddTrackToPlaylist from './components/Views/PlaylistPage/AddTrackToPlayli
 import NotFoundPage from './components/Views/NotFoundPage';
 import NotificationPage from './components/Views/NotificationPage/Notification';
 import AlbumPage from './components/Views/albumPage/album';
+import Layout from './components/Layout';
 
 
 const AppContent = () => {
@@ -43,13 +44,13 @@ const AppContent = () => {
   }, [loggedIn]);
 
   const hideHeaderFooter = [
-    '/register-step1', 
-    '/register-step2', 
-    '/register-step3', 
-    '/login', 
-    '/forgot-password', 
-    '/forgot-password/EmailSent', 
-    '/forgot-password/NewPassword', 
+    '/register-step1',
+    '/register-step2',
+    '/register-step3',
+    '/login',
+    '/forgot-password',
+    '/forgot-password/EmailSent',
+    '/forgot-password/NewPassword',
     '/forgot-password/SuccessfulChangePassword'
   ].includes(location.pathname);
 

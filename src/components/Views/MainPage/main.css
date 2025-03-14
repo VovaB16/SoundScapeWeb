@@ -381,8 +381,6 @@ ul li::before {
 }
 
 
-
-
 /* block mv */
 .block_mv .title {
     color: #FFF;
@@ -424,3 +422,11 @@ ul li::before {
     width: 34px;
     height: 34px;
 }
+
+.block_popular-artists .row {
+    display: flex;
+    gap: 48px;
+    transition: transform 0.5s ease;
+    white-space: nowrap; 
+}
+

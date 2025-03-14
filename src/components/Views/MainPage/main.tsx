@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import './main.css';
 import axios from 'axios';
@@ -20,6 +21,7 @@ interface Artist {
 }
 
 interface Album {
+    id: number;
     title: string;
     year: string;
     image: string;
@@ -32,7 +34,7 @@ const Main = () => {
     const [durations, setDurations] = useState<{ [key: number]: string }>({});
     const [favorites, setFavorites] = useState<number[]>([]);
     const [activeAddButtons, setActiveAddButtons] = useState<number[]>([]);
-    const [artists, setArtists] = useState<Artist[]>([]);
+    const [, setArtists] = useState<Artist[]>([]);
     const [visibleArtists, setVisibleArtists] = useState<Artist[]>([]);
     const [albums, setAlbums] = useState<Album[]>([]);
     const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -80,11 +82,11 @@ const Main = () => {
                 const albumsArray = data.$values || [];
                 if (Array.isArray(albumsArray)) {
                     const mappedAlbums: Album[] = albumsArray.map((album: any) => ({
+                        id: album.id,
                         title: album.title,
                         year: album.releaseDate.split('-')[0],
                         image: album.imageUrl,
-                        artist: album.artistName, 
-                        
+                        artist: album.artistName,
                     })).slice(0, 5);
                     setAlbums(mappedAlbums);
                 } else {
@@ -97,7 +99,7 @@ const Main = () => {
 
         fetchTopSongs();
         fetchArtists();
-        fetchAlbums(); 
+        fetchAlbums();
     }, []);
 
     const addToFavorites = async (songId: number) => {
@@ -128,17 +130,21 @@ const Main = () => {
     };
 
     const scrollArtists = (direction: 'left' | 'right') => {
-        if (artists.length <= 5) return;
+        const container = artistContainerRef.current;
 
-        let newVisibleArtists;
-        if (direction === 'left') {
-            newVisibleArtists = [artists[artists.length - 1], ...visibleArtists.slice(0, -1)];
-        } else {
-            newVisibleArtists = [...visibleArtists.slice(1), artists[0]];
+        if (container) {
+            const scrollAmount = 300;
+            const currentScroll = container.scrollLeft;
+            const newScroll =
+                direction === 'left' ? currentScroll - scrollAmount : currentScroll + scrollAmount;
+
+            container.scrollTo({
+                left: newScroll,
+                behavior: 'smooth',
+            });
         }
-
-        setVisibleArtists(newVisibleArtists);
     };
+
 
     return (
         <div className="main">
@@ -204,6 +210,7 @@ const Main = () => {
                         </button>
                     </div>
                 </div>
+
                 <div className="block_top10">
                     <div className="header-main-page">
                         <h2 className="title">TOP 10</h2>
@@ -254,12 +261,12 @@ const Main = () => {
                     <h2 className="title">Найкращі світові альбоми</h2>
                     <div className="row">
                         {albums.slice(0, 4).map((album, index) => (
-                            <div key={index} className="item">
+                            <Link key={index} to={`/album/${album.id}`} className="item">
                                 <div className="image-container">
                                     <img src={`${BASE_URL}${album.image}`} alt={album.title} />
                                 </div>
                                 <p className="name-album-main">{album.title}</p>
-                            </div>
+                            </Link>
                         ))}
                     </div>
                 </div>

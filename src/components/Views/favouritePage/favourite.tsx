@@ -73,8 +73,13 @@ const Favourite: React.FC = () => {
             setIsPlaying(true);
         }
     };
+    
 
-    const handleDeleteTrack = async (trackId: string) => {
+    const filteredTracks = tracks.filter(track =>
+        track.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const handleDelete = async (trackId: string) => {
         try {
             const response = await fetch(`${BASE_URL}/api/favorites/remove/${trackId}`, {
                 method: 'DELETE',
@@ -92,10 +97,6 @@ const Favourite: React.FC = () => {
             console.error('Error deleting track:', error);
         }
     };
-
-    const filteredTracks = tracks.filter(track =>
-        track.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
 
     return (
         <div className="favourite-container">
@@ -134,9 +135,12 @@ const Favourite: React.FC = () => {
                                         alt={isPlaying ? 'Pause' : trackEnded ? 'Stopped' : 'Play'}
                                     />
                                 </button>
-                                <button className="delete-button" onClick={() => handleDeleteTrack(track.id)}>
-                                    <img src={'/images/deleteIcon.svg'} alt={'Delete'} />
-                                </button>
+                                <div className="dropdown">
+                                <button className="dropdown-button">...</button>
+                                <div className="dropdown-content">
+                                    <button onClick={() => handleDelete(track.id)}>Видалити</button>
+                                </div>
+                            </div>
                             </div>
                         </div>
                     ))
