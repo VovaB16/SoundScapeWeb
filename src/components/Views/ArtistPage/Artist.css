@@ -19,11 +19,11 @@
 }
 
 .subscribe-button-artist.subscribed {
-  background-color: #e53e3e;
+  background: var(--Background-2, #010326);
 }
 
 .subscribe-button-artist.subscribed:hover {
-  background-color: #c53030;
+  background: var(--Background-2, #010326);
 }
 
 .subscribe-button-artist:not(.subscribed) {

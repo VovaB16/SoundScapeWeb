@@ -211,7 +211,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px;
+    padding: 16px 16px 16px 0;
 }
 
 .block_top10 .item div:first-child {
