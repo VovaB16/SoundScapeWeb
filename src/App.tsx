@@ -27,7 +27,7 @@ import AddTrackToPlaylist from './components/Views/PlaylistPage/AddTrackToPlayli
 import NotFoundPage from './components/Views/NotFoundPage';
 import NotificationPage from './components/Views/NotificationPage/Notification';
 import AlbumPage from './components/Views/albumPage/album';
-import Layout from './components/Layout';
+//import Layout from './components/Layout';
 
 
 const AppContent = () => {
