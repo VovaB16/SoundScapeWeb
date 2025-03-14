@@ -36,7 +36,7 @@ const Login = () => {
 
             localStorage.setItem('authToken', data.token);
 
-            login(data.token);
+            login(data.token, data.refreshToken);
 
             navigate('/main');
         } catch (error) {
