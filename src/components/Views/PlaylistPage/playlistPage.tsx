@@ -20,9 +20,25 @@ interface Playlist {
     imageUrl?: string;
 }
 
+interface Artist {
+    id: string;
+    name: string;
+    imageUrl: string;
+}
+
+interface Album {
+    id: string;
+    title: string;
+    year: string;
+    image: string;
+    artist: string;
+}
+
 const PlaylistPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const [playlist, setPlaylist] = useState<Playlist | null>(null);
+    const [artists, setArtists] = useState<Artist[]>([]);
+    const [albums, setAlbums] = useState<Album[]>([]);
     const navigate = useNavigate();
     const [showDeleteIcons, setShowDeleteIcons] = useState(false);
     const [loading, setLoading] = useState<boolean>(true);
@@ -62,7 +78,42 @@ const PlaylistPage: React.FC = () => {
         }
     }, [playlist, BASE_URL]);
 
+    useEffect(() => {
+        const fetchArtists = async () => {
+            try {
+                const response = await axios.get(`${BASE_URL}/api/artists`);
+                const artists = Array.isArray(response.data.$values) ? response.data.$values : [];
+                setArtists(artists.slice(0, 5));
+            } catch (error) {
+                console.error('Error fetching artists:', error);
+            }
+        };
 
+        const fetchAlbums = async () => {
+            try {
+                const response = await fetch(`${BASE_URL}/api/albums/artist/25`);
+                const data = await response.json();
+                const albumsArray = data.$values || [];
+                if (Array.isArray(albumsArray)) {
+                    const mappedAlbums: Album[] = albumsArray.map((album: any) => ({
+                        id: album.id,
+                        title: album.title,
+                        year: album.releaseDate.split('-')[0],
+                        image: album.imageUrl,
+                        artist: album.artistName,
+                    })).slice(0, 5);
+                    setAlbums(mappedAlbums);
+                } else {
+                    console.error('Albums data is not an array:', data);
+                }
+            } catch (error) {
+                console.error('Error fetching albums:', error);
+            }
+        };
+
+        fetchArtists();
+        fetchAlbums();
+    }, [BASE_URL]);
 
     const playTrack = (index: number) => {
         if (playlist) {
@@ -72,6 +123,15 @@ const PlaylistPage: React.FC = () => {
         }
     };
 
+    const handleAlbumClick = (id: string) => {
+        navigate(`/album/${id}`);
+    };
+
+    
+    const handleArtistClick = (id: string) => {
+        navigate(`/artist/${id}`);
+    };
+    
     const handleAddTrackClick = () => {
         navigate(`/playlist/addTrack/${id}`);
     };
@@ -83,14 +143,6 @@ const PlaylistPage: React.FC = () => {
             playTrack(currentTrackIndex);
         }
     };
-
-    //const handlePlayPauseTrack = (track: Track) => {
-    //    const trackIndex = playlist?.playlistTracks.$values.findIndex(pt => pt.track.id === track.id) || 0;
-    //    setCurrentTrackIndex(trackIndex);
-    //    setCurrentTrack(track);
-    //    setIsPlaying(true);
-    //    setTrackEnded(false);
-    //};
 
     if (loading) {
         return <div>Loading...</div>;
@@ -181,6 +233,50 @@ const PlaylistPage: React.FC = () => {
                     <div>Немає треків</div>
                 )}
             </div>
+
+            <div className="recommended-artists">
+            <h5 className='playlist-recomendation-text'>Рекомендуємо</h5>
+            <div className="artist-list">
+                {artists.map((artist) => (
+                    <div 
+                        key={artist.id} 
+                        className="artist-item" 
+                        onClick={() => handleArtistClick(artist.id)}
+                        style={{ cursor: 'pointer' }}
+                    >
+                        <img 
+                            src={`${BASE_URL}${artist.imageUrl}`} 
+                            alt={artist.name} 
+                            className="artist-image" 
+                        />
+                        <p className="artist-name">{artist.name}</p>
+                    </div>
+                ))}
+            </div>
+        </div>
+
+        <div className="recommended-albums-playlist">
+                <h5 className='playlist-recomendation-text'>Рекомендуємо альбоми</h5>
+                <div className="album-list-playlist">
+                    {albums.map((album, index) => (
+                        <div 
+                            key={index} 
+                            className="album-item-playlist" 
+                            onClick={() => handleAlbumClick(album.id)}
+                            style={{ cursor: 'pointer' }}
+                        >
+                            <img 
+                                src={`${BASE_URL}${album.image}`} 
+                                alt={album.title} 
+                                className="album-image" 
+                            />
+                            <p className="album-title-playlist">{album.title}</p>
+                            <p className="album-year">2025 • Альбом</p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
             {currentTrack && (
                 <TrackPlayer
                     track={`${BASE_URL}${currentTrack.filePath}`}
@@ -201,7 +297,6 @@ const PlaylistPage: React.FC = () => {
                             setCurrentTrackIndex(currentTrackIndex + 1);
                             playTrack(currentTrackIndex + 1);
                         } else {
-                            // Loop back to the first track
                             setCurrentTrackIndex(0);
                             playTrack(0);
                         }

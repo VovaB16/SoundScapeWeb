@@ -8,6 +8,7 @@ const Header = () => {
   const [isNotificationsActive, setIsNotificationsActive] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string>('/images/avatars/frame (1).svg');
   const [homeIconSrc, setHomeIconSrc] = useState<string>('/images/HomeIcon.svg');
+  const [notificationIconSrc, setNotificationIconSrc] = useState<string>('/images/notificationIcon.svg');
   const navigate = useNavigate();
   const authContext = useAuth();
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -57,7 +58,12 @@ const Header = () => {
   };
 
   const handleNotificationsClick = () => {
-    setIsNotificationsActive(prevState => !prevState);
+    setNotificationIconSrc('/images/notificationIconActive.svg');
+    setTimeout(() => {
+      setNotificationIconSrc('/images/notificationIcon.svg');
+    }, 200);
+    setIsNotificationsActive(!isNotificationsActive);
+    navigate('/notifications');
   };
 
   const handleProfileClick = () => {
@@ -95,7 +101,7 @@ const Header = () => {
               </button>
               <button onClick={handleNotificationsClick}>
                 <img
-                  src={isNotificationsActive ? "/images/notificationIconActive.svg" : "/images/notificationIcon.svg"}
+                  src={notificationIconSrc}
                   alt="Notifications"
                   className="h-10"
                 />

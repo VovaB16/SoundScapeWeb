@@ -24,6 +24,11 @@ import MyLibrary from './components/Views/MyLibraryPage/MyLibrary';
 import PlaylistPage from './components/Views/PlaylistPage/playlistPage';
 import AllSongs from './components/Views/allSongsPage/allSongs';
 import AddTrackToPlaylist from './components/Views/PlaylistPage/AddTrackToPlaylist';
+import NotFoundPage from './components/Views/NotFoundPage';
+import NotificationPage from './components/Views/NotificationPage/Notification';
+import AlbumPage from './components/Views/albumPage/album';
+import Layout from './components/Layout';
+
 
 const AppContent = () => {
   const auth = useAuth();
@@ -39,13 +44,13 @@ const AppContent = () => {
   }, [loggedIn]);
 
   const hideHeaderFooter = [
-    '/register-step1', 
-    '/register-step2', 
-    '/register-step3', 
-    '/login', 
-    '/forgot-password', 
-    '/forgot-password/EmailSent', 
-    '/forgot-password/NewPassword', 
+    '/register-step1',
+    '/register-step2',
+    '/register-step3',
+    '/login',
+    '/forgot-password',
+    '/forgot-password/EmailSent',
+    '/forgot-password/NewPassword',
     '/forgot-password/SuccessfulChangePassword'
   ].includes(location.pathname);
 
@@ -71,6 +76,8 @@ const AppContent = () => {
                 <Route path="/playlist/:id" element={<PlaylistPage />} />
                 <Route path="/playlist/AddTrack/:id" element={<AddTrackToPlaylist />} />
                 <Route path="/all-songs" element={<AllSongs />} />
+                <Route path="/album/:id" element={<AlbumPage />} />
+                <Route path="/notifications" element={<NotificationPage />} />
                 <Route path="/logout" element={<Logout />} />
               </>
             ) : (
@@ -98,6 +105,7 @@ const AppContent = () => {
             <Route path="/forgot-password/NewPassword" element={<CreateNewPassword />} />
             <Route path="/forgot-password/SuccessfulChangePassword" element={<SuccessfulPasswordChange />} />
 
+            <Route path="*" element={<NotFoundPage />} />
             <Route path="/" element={<Navigate to={loggedIn ? "/main" : "/main-guest"} />} />
           </Routes>
         </div>
