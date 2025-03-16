@@ -52,12 +52,12 @@ const ForgotPassword = () => {
             </div>
 
             <div className="w-1/2 flex flex-col justify-center items-center p-8 text-left">
-                <h2 
+                <h6 
                     className="mb-6"
                     style={{ color: '#FFF', fontFamily: 'Noto Sans', fontSize: '48px', fontStyle: 'normal', fontWeight: 700, lineHeight: 'normal' }}
                 >
                     Скидання пароля
-                </h2>
+                </h6>
                 <p 
                     className="mb-6 max-w-md mt-12"
                     style={{ color: '#B3B3B3', fontFamily: 'Noto Sans', fontSize: '16px', fontStyle: 'normal', fontWeight: 400, lineHeight: 'normal' }}

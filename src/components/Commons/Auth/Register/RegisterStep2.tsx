@@ -14,7 +14,7 @@ const RegisterStep2 = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
-
+  const [hovered, setHovered] = useState(false);
   const toggleShowPassword = () => setShowPassword(!showPassword);
   const toggleShowRepeatPassword = () => setShowRepeatPassword(!showRepeatPassword);
 
@@ -65,16 +65,26 @@ const RegisterStep2 = () => {
       </div>
 
       <div className="w-1/2 flex flex-col justify-center items-center p-8">
-        <h2 className="text-3xl font-bold mb-[48px]">Створіть пароль</h2>
+        <h2 className="text-3xl font-bold mb-[48px] mr-[100px]">Створіть пароль</h2>
         <div className="w-full max-w-md">
           <div className="mb-4">
             <div className="w-[400px] h-[2px] flex-shrink-0 rounded-[10px] bg-[#D9D9D9]">
               <div className="h-full w-2/3 rounded-[10px] bg-[#A305A6]"></div>
             </div>
             <div className="flex items-center">
-              <Link to="/register-step1" className="mr-4">
-                <img src="/images/arrowIcon.svg" alt="Back" />
-              </Link>
+            <Link 
+      to="/register-step1" 
+      className="mr-4"
+      onMouseEnter={() => setHovered(true)} 
+      onMouseLeave={() => setHovered(false)}
+    >
+      <img 
+        src={hovered ? "/images/Arrow2.svg" : "/images/arrowIcon.svg"} 
+        alt="Back" 
+        className={`arrow-icon ${hovered ? 'flipped' : ''}`}
+      />
+    </Link>
+
               <span className="text-[#B3B3B3] font-['Noto_Sans'] text-[16px] font-normal leading-normal">
                 Крок 2 з 3
               </span>

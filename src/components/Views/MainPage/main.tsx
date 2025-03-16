@@ -33,12 +33,13 @@ const Main = () => {
     const [topSongs, setTopSongs] = useState<Song[]>([]);
     const [durations, setDurations] = useState<{ [key: number]: string }>({});
     const [favorites, setFavorites] = useState<number[]>([]);
-    const [activeAddButtons, setActiveAddButtons] = useState<number[]>([]);
+    const [favoritesLoaded, setFavoritesLoaded] = useState(false); // New state variable
     const [, setArtists] = useState<Artist[]>([]);
     const [visibleArtists, setVisibleArtists] = useState<Artist[]>([]);
     const [albums, setAlbums] = useState<Album[]>([]);
     const BASE_URL = import.meta.env.VITE_API_BASE_URL;
     const artistContainerRef = useRef<HTMLDivElement>(null);
+    const [, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchTopSongs = async () => {
@@ -102,24 +103,43 @@ const Main = () => {
         fetchAlbums();
     }, []);
 
+    useEffect(() => {
+        const fetchFavorites = async () => {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) throw new Error("No authentication token found!");
+
+                const response = await axios.get(`${BASE_URL}/api/favorites/list`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                if (response.status !== 200) {
+                    throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+                }
+
+                setFavorites(Array.isArray(response.data) ? response.data : []);
+            } catch (error) {
+                console.error('Error fetching favorites:', error);
+                setFavorites([]);
+            } finally {
+                setFavoritesLoaded(true);
+                setIsLoading(false);
+            }
+        };
+
+        fetchFavorites();
+    }, []);
+
     const addToFavorites = async (songId: number) => {
-        if (favorites.includes(songId)) {
-            alert('This track is already in your favorites.');
-            return;
-        }
+        if (favorites.includes(songId)) return;
 
         try {
             const token = localStorage.getItem('authToken');
             await axios.post(`${BASE_URL}/api/favorites/add/${songId}`, {}, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+                headers: { Authorization: `Bearer ${token}` }
             });
+
             setFavorites(prev => [...prev, songId]);
-            setActiveAddButtons(prev => [...prev, songId]);
-            setTimeout(() => {
-                setActiveAddButtons(prev => prev.filter(id => id !== songId));
-            }, 200);
         } catch (error) {
             console.error('Error adding to favorites:', error);
         }
@@ -144,7 +164,6 @@ const Main = () => {
             });
         }
     };
-
 
     return (
         <div className="main">
@@ -214,14 +233,11 @@ const Main = () => {
                 <div className="block_top10">
                     <div className="header-main-page">
                         <h2 className="title">TOP 10</h2>
-                        <button className="btn-all-song" onClick={() => navigate('/all-songs')}>
-                            Показати всі
-                        </button>
                     </div>
 
                     <div className="column">
                         <ul>
-                            {topSongs.map((song, index) => (
+                            {favoritesLoaded && topSongs.map((song, index) => (
                                 <li key={index} className="item">
                                     <div>
                                         <div className="image-container">
@@ -234,15 +250,16 @@ const Main = () => {
                                     </div>
 
                                     <div className="controls">
-                                        <button
+                                        <button 
                                             type="button"
-                                            className="btn"
+                                            className={`btn ${favorites.includes(song.id) ? 'cursor-not-allowed opacity-50' : ''}`}
                                             id="add"
                                             onClick={() => addToFavorites(song.id)}
+                                            disabled={favorites.includes(song.id)}
                                         >
                                             <img
                                                 className='add-icon-image-main'
-                                                src={activeAddButtons.includes(song.id) ? '/images/add-icon-active.svg' : '/images/home_page_images/add_icon.png'}
+                                                src={favorites.includes(song.id) ? '/images/add-icon-active.svg' : '/images/home_page_images/add_icon.png'}
                                                 alt="add"
                                             />
                                         </button>

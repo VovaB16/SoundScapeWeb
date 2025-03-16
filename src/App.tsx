@@ -27,7 +27,7 @@ import AddTrackToPlaylist from './components/Views/PlaylistPage/AddTrackToPlayli
 import NotFoundPage from './components/Views/NotFoundPage';
 import NotificationPage from './components/Views/NotificationPage/Notification';
 import AlbumPage from './components/Views/albumPage/album';
-import Layout from './components/Layout';
+import GoogleSuccess from './components/Commons/Auth/GoogleSucces';
 
 
 const AppContent = () => {
@@ -78,6 +78,7 @@ const AppContent = () => {
                 <Route path="/all-songs" element={<AllSongs />} />
                 <Route path="/album/:id" element={<AlbumPage />} />
                 <Route path="/notifications" element={<NotificationPage />} />
+                <Route path="/google-success" element={<GoogleSuccess />} />
                 <Route path="/logout" element={<Logout />} />
               </>
             ) : (

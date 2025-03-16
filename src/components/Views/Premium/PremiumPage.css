@@ -75,7 +75,7 @@
 }
 
 .secondary-button:hover {
-    background-color: #A305A6;
+    border-color: #A305A6;
     color: #ffffff;
 }
 

@@ -17,7 +17,9 @@ const RegisterStep1 = () => {
       navigate('/register-step2');
     }
   };
-
+  const handleGoogleLogin = () => {
+    window.location.href = "https://localhost:7179/api/google/callback";
+  };
   return (
     <div className="flex h-screen">
       <div className="w-1/2 flex flex-col justify-between items-center p-8 bg-cover bg-center" style={{ backgroundImage: "linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), url('/images/SUM.png')", borderRadius: '20px' }}>
@@ -29,7 +31,7 @@ const RegisterStep1 = () => {
       </div>
 
       <div className="w-1/2 flex flex-col justify-center items-center p-8">
-        <h2 className="text-3xl font-bold mb-[48px]">Реєстрація</h2>
+        <h2 className="text-3xl font-bold mb-[48px] mr-[100px]">Реєстрація</h2>
         <div className="w-full max-w-md">
           <div className="mb-4">
             <div className="w-[400px] h-[2px] flex-shrink-0 rounded-[10px] bg-[#D9D9D9]">
@@ -68,25 +70,26 @@ const RegisterStep1 = () => {
             </div>
           </form>
 
-          <div className="flex items-center justify-left mb-[40px]">
+          {/* <div className="flex items-center justify-left mb-[40px]">
             <img src="/images/Line.svg" alt="Line" className="w-[170px] h-[2px] flex-shrink-0 rounded-[10px]" />
             <span className="text-white font-['Noto_Sans'] text-[14px] font-normal mx-4">або</span>
             <img src="/images/Line.svg" alt="Line" className="w-[170px] h-[2px] flex-shrink-0 rounded-[10px]" />
           </div>
 
           <div className="flex flex-col items-start gap-8 self-stretch mb-[40px]">
+          <button
+    className="flex p-4 flex-row items-center gap-4 w-[400px] rounded-[20px] border border-[#B3B3B3] hover:text-white hover:border-white"
+    type="button"
+    onClick={handleGoogleLogin}
+  >
+    <img src="/images/googleLogo.svg" alt="Google" className="w-6 h-6" />
+    <span className="text-[#B3B3B3] font-['Noto_Sans'] text-[16px] font-bold leading-normal">
+      Зареєструватися через Google
+    </span>
+  </button>
+            
             <button
-              className="flex p-4 flex-row items-center gap-4 w-[400px] rounded-[20px] border border-[#B3B3B3]"
-              type="button"
-            >
-              <img src="/images/googleLogo.svg" alt="Google" className="w-6 h-6" />
-              <span className="text-[#B3B3B3] font-['Noto_Sans'] text-[16px] font-bold leading-normal">
-                Зареєструватися через Google
-              </span>
-            </button>
-
-            <button
-              className="flex p-4 flex-row items-center gap-4 w-[400px] rounded-[20px] border border-[#B3B3B3] hover:text-white"
+              className="flex p-4 flex-row items-center gap-4 w-[400px] rounded-[20px] border border-[#B3B3B3] hover:text-white hover:border-white"
               type="button"
             >
               <img src="/images/facebookLogo.svg" alt="Facebook" className="w-6 h-6" />
@@ -96,7 +99,7 @@ const RegisterStep1 = () => {
             </button>
 
             <button
-              className="flex p-4 flex-row items-center gap-4 w-[400px] rounded-[20px] border border-[#B3B3B3] hover:text-white"
+              className="flex p-4 flex-row items-center gap-4 w-[400px] rounded-[20px] border border-[#B3B3B3] hover:text-white hover:border-white"
               type="button"
             >
               <img src="/images/AppleLogo.svg" alt="Apple" className="w-6 h-6" />
@@ -104,7 +107,8 @@ const RegisterStep1 = () => {
                 Зареєструватися через Apple
               </span>
             </button>
-          </div>
+          </div>*/}
+
 
           <div className="">
             <span className="text-[#B3B3B3] font-['Noto_Sans'] text-[16px] font-normal leading-normal">

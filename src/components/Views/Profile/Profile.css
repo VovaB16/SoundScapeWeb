@@ -105,7 +105,7 @@
 }
 
 .btnProfile:hover {
-    background: rgba(45, 1, 64, 0.5);
+    background: #2D0140;
 }
 
 .btnProfile::before {
