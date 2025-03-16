@@ -4,6 +4,7 @@ import NavigationMenu from './NavigationMenu';
 import { useAuth } from '../../context/AuthContext';
 
 const Header = () => {
+  const [searchQuery, setSearchQuery] = useState("");
   const [isHomeActive, setIsHomeActive] = useState(false);
   const [isNotificationsActive, setIsNotificationsActive] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string>('/images/avatars/frame (1).svg');
@@ -64,6 +65,12 @@ const Header = () => {
     navigate('/profile');
   };
 
+  const handleSearch = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!searchQuery.trim()) return; // Не отправляем пустой запрос
+    navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+  };
+
   return (
     <>
       <div className="fixed top-0 left-0 w-full z-50 font-noto-sans">
@@ -79,16 +86,18 @@ const Header = () => {
                 />
               </button>
             </div>
-            <div className="flex-grow flex items-center justify-center">
+            <form onSubmit={handleSearch} className="flex-grow flex items-center justify-center">
               <div className="flex items-center bg-black text-white border border-white rounded-[22px] px-5 py-3 w-full max-w-[750px] gap-[12px]">
                 <img src="/images/SearchIcon.svg" alt="Search" className="h-6 mr-3" style={{ width: '26px', height: '26px', flexShrink: 0 }} />
                 <input
-                  className="border-none outline-none bg-black text-white placeholder-white"
+                  className="border-none outline-none bg-black text-white placeholder-white w-full"
                   type="text"
                   placeholder="Пошук"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-            </div>
+            </form> 
             <div className="flex items-center pr-[160px] gap-5">
               <button onClick={() => navigate('/premium')} className="flex items-center justify-center w-[180px] p-3 gap-[12px] rounded-[22px] bg-gradient-to-b from-[#660273] to-[#A305A6] text-white">
                 Premium

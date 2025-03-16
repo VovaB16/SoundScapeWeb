@@ -24,10 +24,11 @@ import MyLibrary from './components/Views/MyLibraryPage/MyLibrary';
 import PlaylistPage from './components/Views/PlaylistPage/playlistPage';
 import AllSongs from './components/Views/allSongsPage/allSongs';
 import AddTrackToPlaylist from './components/Views/PlaylistPage/AddTrackToPlaylist';
+import Search from './components/Views/SearchPage/search';
 
 const AppContent = () => {
-  const auth = useAuth();
-  const loggedIn = auth ? auth.loggedIn : false;
+  
+  const loggedIn = true;
   const location = useLocation();
 
   useEffect(() => {
@@ -59,6 +60,7 @@ const AppContent = () => {
             {loggedIn ? (
               <>
                 <Route path="/main" element={<Main />} />
+                <Route path="/search" element={<Search />} />
                 <Route path="/artist/:id" element={<Artist />} />
                 <Route path="/profile" element={<Profile setLoggedIn={loggedIn => console.log(loggedIn)} />} />
                 <Route path="/login" element={<Navigate to="/main" />} />
