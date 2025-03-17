@@ -109,3 +109,17 @@
     border-radius: 20px;
     border: 1px solid var(--Text, #FFF);
 }
+
+.track-image-songs{
+    border-radius: 5px;
+}
+
+.title-allsongs{
+    margin-left: 0;
+    color: #FFF;
+font-family: "Noto Sans";
+font-size: 32px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+}

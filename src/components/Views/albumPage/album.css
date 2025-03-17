@@ -1,13 +1,13 @@
-.playlist-container {
+.album-container-album {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     padding-left: 300px;
-    padding-right: 300px;
+
     text-align: left;
 }
 
-.playlist-header {
+.album-header {
     display: flex;
     align-items: start;
     justify-content: flex-start;
@@ -15,22 +15,31 @@
     margin-top: 30px;
 }
 
-.playlist-image-page {
+.album-image-page {
     width: 250px;
     height: 250px;
     border-radius: 10px;
 }
 
-.playlist-title {
+.album-title-album {
     color: #FFF;
     font-family: "Noto Sans";
     font-size: 36px;
     font-weight: 700;
     text-transform: capitalize;
+    max-width: 500px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+
 }
 
-.playlist-description {
-    color: var(--Gray, #B3B3B3);
+
+.album-description {
+
     font-family: "Noto Sans";
     font-size: 16px;
     font-weight: 400;
@@ -47,21 +56,22 @@
     gap: 16px;
 }
 
-.track-item {
+.track-item-album {
     display: flex;
     padding: 16px;
     flex-direction: row;
     align-items: center;
-    gap: 16px;
+    gap: 24px;
     align-self: stretch;
     border-radius: 20px;
-    opacity: 0.66;
+
     background: rgba(45, 1, 64, 0.20);
     position: relative;
-    height: 180px;
+    height: auto;
+    width: 100%;
 }
 
-.playlist-d {
+.album-d {
     color: #FFF;
     font-family: "Noto Sans";
     font-size: 16px;
@@ -90,14 +100,17 @@
     flex-grow: 1;
 }
 
-.track-title {
-    width: 442px;
+.track-title-album {
     color: #FFF;
     font-family: "Noto Sans";
     font-size: 24px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
+    width: 100%;
+
+    white-space: nowrap;
+
 }
 
 .track-artist {
@@ -119,22 +132,22 @@
     line-height: normal;
 }
 
-.play-button-playlist {
+.play-button-album {
     width: 50px;
     height: 100%;
 }
 
-.play-button-playlist2 {
-    margin-top: 100px;
+.play-button-album2 {
+    margin-top: 50px;
 }
 
-.dropdown-playlist {
-    margin-top: 100px;
+.dropdown-album {
+    margin-top: 50px;
     margin-left: 16px;
 
 }
 
-.dropdown-playlist {
+.dropdown-album {
     position: relative;
     display: inline-block;
 }
@@ -148,7 +161,7 @@
     z-index: 1;
 }
 
-.dropdown-playlist:hover .dropdown-content {
+.dropdown-album:hover .dropdown-content {
     display: block;
     background-color: #ffffff;
 }
@@ -159,7 +172,7 @@
     background-color: #f1f1f1;
 }
 
-.playlist-controls {
+.album-controls {
     display: flex;
     gap: 16px;
     align-items: flex-start;
@@ -167,7 +180,7 @@
     margin-top: 20px;
 }
 
-.delete-icon-playlist {
+.delete-icon-album {
     width: 36px;
     height: 36px;
     background: none;
@@ -183,6 +196,7 @@
     height: 100%;
     filter: invert(1);
 }
+
 
 
 
@@ -228,14 +242,14 @@
     flex-direction: column;
 }
 
-.album-list-playlist {
+.album-list {
     display: flex;
     flex-wrap: wrap;
 
     gap: 32px;
 }
 
-.album-item-playlist {
+.album-item {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -244,13 +258,14 @@
     background: var(--alternative-background-20, rgba(186, 214, 235, 0.20));
 }
 
-.album-item-playlist:hover {
+.album-item:hover {
     background: var(--alternative-background-40, rgba(186, 214, 235, 0.65));
 }
 
 .artist-item:hover {
     background: var(--alternative-background-40, rgba(186, 214, 235, 0.65));
 }
+
 .album-image {
     height: 150px;
     width: 150px;
@@ -259,7 +274,7 @@
     background: url(<path-to-image>) lightgray 50% / cover no-repeat;
 }
 
-.album-title-playlist {
+.album-title2 {
     overflow: hidden;
     color: #FFF;
     text-overflow: ellipsis;
@@ -283,12 +298,12 @@
 }
 
 .artist-list,
-.album-list-playlist {
+.album-list {
     flex-direction: row;
     justify-content: flex-start;
 }
 
-.playlist-recomendation-text {
+.album-recommendation-text-album {
     text-align: left;
     margin-left: 0;
     color: #FFF;
@@ -299,4 +314,194 @@
     line-height: normal;
     margin-top: 48px;
     margin-bottom: 24px;
+}
+
+
+
+
+
+
+
+
+.album-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 300px;
+    padding-right: 300px;
+    text-align: left;
+}
+
+.album-header {
+    display: flex;
+    align-items: start;
+    justify-content: flex-start;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.album-image-page {
+    width: 250px;
+    height: 250px;
+    border-radius: 10px;
+}
+
+.album-title {
+    color: #FFF;
+    font-family: "Noto Sans";
+    font-size: 36px;
+    font-weight: 700;
+    text-transform: capitalize;
+    max-width: 500px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+}
+
+.album-description {
+    color: var(--Gray, #B3B3B3);
+    font-family: "Noto Sans";
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.track-list {
+    margin-top: 20px;
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+
+.album-d {
+    color: #FFF;
+    font-family: "Noto Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.album-controls {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    justify-content: start;
+    margin-top: 20px;
+}
+
+.recommended-albums {
+    display: flex;
+    flex-direction: column;
+    margin-top: 48px;
+}
+
+.album-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    width: 100%;
+}
+
+.album-item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px;
+    border-radius: 10px;
+    background: var(--alternative-background-20, rgba(186, 214, 235, 0.20));
+    width: 100%;
+}
+
+.album-item:hover {
+    background: var(--alternative-background-40, rgba(186, 214, 235, 0.65));
+}
+
+.album-image {
+    height: 150px;
+    width: 150px;
+    align-self: stretch;
+    border-radius: 10px;
+    background: url(<path-to-image>) lightgray 50% / cover no-repeat;
+}
+
+.album-title2 {
+    overflow: hidden;
+    color: #FFF;
+    text-overflow: ellipsis;
+    font-family: "Noto Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    text-transform: uppercase;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    max-width: 150px;
+    word-wrap: break-word;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+}
+
+.album-year {
+    font-size: 14px;
+    color: #aaa;
+}
+
+.album-recommendation-text-album {
+    text-align: left;
+    margin-left: 0;
+    color: #FFF;
+    font-family: "Noto Sans";
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+
+    margin-bottom: 24px;
+}
+
+
+.album-page {
+
+    margin-right: 300px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 60px;
+}
+
+.recommended-albums {
+    margin-top: 0;
+}
+
+.album-recommendation-text-album {
+    margin-top: 30px;
+}
+
+
+
+.addalbum {
+    width: 24px;
+    height: 24px;
+}
+
+.track-duration-album{
+    color: var(--Gray, #B3B3B3);
+text-align: center;
+font-family: "Noto Sans";
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: normal;
+margin-left:450px;
 }

@@ -1,0 +1,38 @@
+.sub-text-notification {
+    color: #FFF;
+margin-left: 0;
+    font-family: "Noto Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.main-text-notification {
+    color: #FFF;
+    font-family: "Noto Sans";
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+
+}
+
+.main-center-text-notification {
+    color: #FFF;
+    text-align: center;
+    font-family: "Noto Sans";
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    font-size: 40px;
+}
+.notification-main{
+    margin-left: 300px;
+    margin-right: 300px;
+}
+
+.center-text-notification{
+    margin-top: 64px;
+}

@@ -18,7 +18,8 @@ const Profile: React.FC<ProfileProps> = ({ }) => {
     const [avatarUrl, setAvatarUrl] = useState<string>('');
     const [, setAccountCreationDate] = useState<string>('');
     const [playlists, setPlaylists] = useState<any[]>([]);
-    const [subscriptionsCount] = useState<number>(0);
+    const [subscriptions, setSubscriptions] = useState<any[]>([]);
+    const [subscriptionsCount, setSubscriptionsCount] = useState<number>(0);
     const [birthDay, setBirthDay] = useState('');
     const [birthMonth, setBirthMonth] = useState('');
     const [birthYear, setBirthYear] = useState('');
@@ -57,6 +58,7 @@ const Profile: React.FC<ProfileProps> = ({ }) => {
         }
     };
 
+
     const fetchUserPlaylists = async () => {
         try {
             const response = await fetch(`${BASE_URL}/api/playlists/user`, {
@@ -68,7 +70,6 @@ const Profile: React.FC<ProfileProps> = ({ }) => {
             });
             if (response.ok) {
                 const data = await response.json();
-                //console.log('Playlists response:', data); // Log the response
                 if (data && Array.isArray(data.$values)) {
                     setPlaylists(data.$values);
                 } else {
@@ -82,10 +83,38 @@ const Profile: React.FC<ProfileProps> = ({ }) => {
         }
     };
 
+    const fetchUserSubscriptions = async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/api/artists/subscriptions`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authContext?.token}`
+                }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Subscriptions data:', data);
+                if (data && Array.isArray(data.$values)) {
+                    setSubscriptions(data.$values);
+                    setSubscriptionsCount(data.$values.length);
+                } else {
+                    setSubscriptions([]);
+                    setSubscriptionsCount(0);
+                }
+            } else {
+                console.error('Failed to fetch subscriptions');
+            }
+        } catch (error) {
+            console.error('Error fetching subscriptions:', error);
+        }
+    };
+
     useEffect(() => {
         if (authContext?.token) {
             fetchUserData();
             fetchUserPlaylists();
+            fetchUserSubscriptions();
         }
     }, [authContext]);
 
@@ -177,6 +206,13 @@ const Profile: React.FC<ProfileProps> = ({ }) => {
                 alert('An unknown error occurred');
             }
         }
+    };
+
+    const getFullImageUrl = (imageUrl: string) => {
+        if (imageUrl.startsWith('http')) {
+            return imageUrl;
+        }
+        return `${BASE_URL}${imageUrl}`;
     };
 
     return (
@@ -277,43 +313,63 @@ const Profile: React.FC<ProfileProps> = ({ }) => {
             </div>
 
             <div className="profile-lists-container">
-                <div className="list-header">
-                    <h3>Підписки</h3>
-                    <a href="#" className="show-all">Показати всі</a>
-                </div>
-                <ul>
-                    {[...Array(5)].map((_, index) => (
-                        <li key={index}>
-                            <div className="playlist-item-profile">
-                                <div>
-                                    <img src="/images/profilePage/subscribe.svg" alt="Subscription Avatar" className="subscription-avatar" />
-                                </div>
-                                <p className="subscription-name">Підписка {index + 1}</p>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
+    <div className="list-header">
+        <h3>Підписки</h3>
+    </div>
+    {subscriptionsCount === 0 ? (
+        <p>У вас немає підписок</p>
+    ) : (
+        <ul>
+            {subscriptions.slice(0, 5).map((subscription) => (
+                <li
+                    key={subscription.id}
+                    onClick={() => navigate(`/artist/${subscription.id}`)}
+                    className="clickable-item"
+                >
+                    <div className="playlist-item-profile">
+                        <div>
+                            <img
+                                src={getFullImageUrl(subscription.imageUrl)}
+                                alt="Subscription Avatar"
+                                className="subscription-avatar"
+                            />
+                        </div>
+                        <p className="subscription-name">{subscription.name}</p>
+                    </div>
+                </li>
+            ))}
+        </ul>
+    )}
 
-                <div className="list-header">
-                    <h3>Плейлисти</h3>
-                    <a href="#" className="show-all">Показати всі</a>
-                </div>
-                <ul>
-                    {playlists.slice(0, 5).map((playlist) => (
-                        <li key={playlist.id}>
-                            <div className="playlist-item-profile">
-                                <div className="playlist-avatar-container">
-                                    <img src={playlist.imageUrl || '/images/profilePage/playlistAvatar.svg'} alt="Playlist Avatar" className="playlist-avatar" onError={(e) => {
-                                        console.error('Failed to load image:', e.currentTarget.src);
-                                        e.currentTarget.src = '/images/profilePage/playlistAvatar.svg';
-                                    }} />
-                                </div>
-                                <p className="playlist-name">{playlist.name}</p>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
-            </div>
+    <div className="list-header">
+        <h3>Плейлисти</h3>
+    </div>
+    {playlists.length === 0 ? (
+        <p>У вас немає плейлистів</p>
+    ) : (
+        <ul>
+            {playlists.slice(0, 5).map((playlist) => (
+                <li key={playlist.id}>
+                    <div className="playlist-item-profile">
+                        <div className="playlist-avatar-container">
+                            <img
+                                src={playlist.imageUrl || '/images/profilePage/playlistAvatar.svg'}
+                                alt="Playlist Avatar"
+                                className="playlist-avatar"
+                                onError={(e) => {
+                                    console.error('Failed to load image:', e.currentTarget.src);
+                                    e.currentTarget.src = '/images/profilePage/playlistAvatar.svg';
+                                }}
+                            />
+                        </div>
+                        <p className="playlist-name">{playlist.name}</p>
+                    </div>
+                </li>
+            ))}
+        </ul>
+    )}
+</div>
+
         </div>
     );
 };
