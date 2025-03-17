@@ -44,25 +44,21 @@ const Main = () => {
         const fetchTopSongs = async () => {
             try {
                 const response = await axios.get(`${BASE_URL}/api/tracks`);
-                const songs = Array.isArray(response.data.$values) ? response.data.$values : [];
-                const updatedSongs = songs.slice(0, 10).map((song: { imageUrl: any; }) => ({
+                
+                // Указываем тип явно
+                const songs: Song[] = Array.isArray(response.data.$values) ? response.data.$values : [];
+        
+                const updatedSongs = songs.slice(0, 10).map((song: Song) => ({ 
                     ...song,
                     imageUrl: `${BASE_URL}${song.imageUrl}`
                 }));
+        
                 setTopSongs(updatedSongs);
-
-                updatedSongs.forEach((song: { filePath: any; id: any; }) => {
-                    const audio = new Audio(`${BASE_URL}${song.filePath}`);
-                    audio.addEventListener('loadedmetadata', () => {
-                        const minutes = Math.floor(audio.duration / 60);
-                        const seconds = Math.floor(audio.duration % 60).toString().padStart(2, '0');
-                        setDurations(prev => ({ ...prev, [song.id]: `${minutes}:${seconds}` }));
-                    });
-                });
             } catch (error) {
                 console.error('Error fetching top songs:', error);
             }
         };
+        
 
         const fetchArtists = async () => {
             try {
@@ -101,6 +97,7 @@ const Main = () => {
         fetchArtists();
         fetchAlbums();
     }, []);
+
 
     const addToFavorites = async (songId: number) => {
         if (favorites.includes(songId)) {
@@ -150,42 +147,8 @@ const Main = () => {
         <div className="main">
             <div className="container">
                 <div className="block_day-recomendation">
-                    <div className="content">
-                        <h1>Arctic Monkeys</h1>
-                        <div className="row">
-                            <div className="item">
-                                <img src="images/home_page_images/music_icon.png" alt="songImage" />
-                            </div>
-                            <div className="item">
-                                <div className="under-title">
-                                    <img src="/images/home_page_images/ellipse-8.png" alt="" />
-                                    <p>Рекомендація дня</p>
-                                </div>
-                                <div className="song-name">
-                                    <p className="name">I Wanna Be Yours</p>
-                                    <button type="button" className="btn" id="share">
-                                        <img src="/images/home_page_images/share_icon.png" alt="Share" />
-                                    </button>
-                                </div>
-                                <div className="controls">
-                                    <button type="button" className="btn" id="play">
-                                        <img src="/images/home_page_images/player_icon.png" alt="play" />
-                                    </button>
-                                    <button type="button" className="btn" id="add">
-                                        <img src="/images/home_page_images/add_icon.png" alt="add" />
-                                    </button>
-                                    <button type="button" className="btn" id="more">
-                                        <img src="/images/home_page_images/more_icon.png" alt="more" />
-                                    </button>
-                                </div>
-                            </div>
-                            <div className="item">
-                                <p className="artist-information">
-                                    With their nervy and literate indie rock sound, Arctic Monkeys are a respected, adventurous, and successful group that could easily be called Britain's biggest band of the early 21st century.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                    <h1>Arctic Monkeys</h1>
+                    <p>Рекомендація дня: I Wanna Be Yours</p>
                 </div>
                 <div className="block_popular-artists">
                     <h2 className="title">Популярні виконавці</h2>
@@ -233,33 +196,22 @@ const Main = () => {
                                         </div>
                                     </div>
 
-                                    <div className="controls">
-                                        <button
-                                            type="button"
-                                            className="btn"
-                                            id="add"
-                                            onClick={() => addToFavorites(song.id)}
-                                        >
-                                            <img
-                                                className='add-icon-image-main'
-                                                src={activeAddButtons.includes(song.id) ? '/images/add-icon-active.svg' : '/images/home_page_images/add_icon.png'}
-                                                alt="add"
-                                            />
-                                        </button>
-                                        <p className="time">{durations[song.id] || 'Loading...'}</p>
-                                        <button type="button" className="btn" id="more">
-                                            <img src="/images/home_page_images/more_icon.png" alt="more" />
-                                        </button>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+                <div className="block_top10">
+                    <h2>TOP 10</h2>
+                    <ul>
+                        {topSongs.map(song => (
+                            <li key={song.id}>
+                                <img src={song.imageUrl} alt={song.title} />
+                                <p>{song.title} - {song.artist}</p>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
 
                 <div className="block_best-world-albums">
-                    <h2 className="title">Найкращі світові альбоми</h2>
+                    <h2>Найкращі світові альбоми</h2>
                     <div className="row">
+
                         {albums.slice(0, 4).map((album, index) => (
                             <Link key={index} to={`/album/${album.id}`} className="item">
                                 <div className="image-container">
@@ -277,3 +229,4 @@ const Main = () => {
 };
 
 export default Main;
+
