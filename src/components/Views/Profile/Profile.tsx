@@ -180,6 +180,9 @@ const Profile: React.FC<ProfileProps> = ({ }) => {
         setIsEditing(true);
     };
 
+    const handleSettingClick = () => {
+        navigate('/settings');
+    };
     const handleSendConfirmationEmail = async () => {
         try {
             const response = await fetch(`${BASE_URL}/api/auth/request-email-confirmation`, {
@@ -307,7 +310,7 @@ const Profile: React.FC<ProfileProps> = ({ }) => {
                 )}
 
                 <button className="btnProfile btn-edit" onClick={handleEditClick}>Редагувати профіль</button>
-                <button className="btnProfile btn-settings">Налаштування</button>
+                <button className="btnProfile btn-settings" onClick={handleSettingClick}>Налаштування</button>
                 <button onClick={handleLogout} className="btnProfile btn-logout">Вийти</button>
             </div>
 

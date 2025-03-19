@@ -17,9 +17,6 @@ const RegisterStep1 = () => {
       navigate('/register-step2');
     }
   };
-  const handleGoogleLogin = () => {
-    window.location.href = "https://localhost:7179/api/google/callback";
-  };
   return (
     <div className="flex h-screen">
       <div className="w-1/2 flex flex-col justify-between items-center p-8 bg-cover bg-center" style={{ backgroundImage: "linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), url('/images/SUM.png')", borderRadius: '20px' }}>

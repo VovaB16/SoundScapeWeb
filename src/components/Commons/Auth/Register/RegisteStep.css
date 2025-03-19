@@ -78,10 +78,10 @@ input[type="checkbox"] {
 
 
   .arrow-icon {
-    transition: none; /* Без анімацій */
+    transition: none; 
   }
   
   .arrow-icon.flipped {
-    transform: rotate(180deg); /* Поворот на 180 градусів */
+    transform: rotate(180deg); 
   }
   
