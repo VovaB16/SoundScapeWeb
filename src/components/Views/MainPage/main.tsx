@@ -195,23 +195,15 @@ const Main = () => {
                                             <p className="name-artist">{song.artist}</p>
                                         </div>
                                     </div>
-
-                <div className="block_top10">
-                    <h2>TOP 10</h2>
-                    <ul>
-                        {topSongs.map(song => (
-                            <li key={song.id}>
-                                <img src={song.imageUrl} alt={song.title} />
-                                <p>{song.title} - {song.artist}</p>
-                            </li>
-                        ))}
-                    </ul>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                 </div>
 
                 <div className="block_best-world-albums">
                     <h2>Найкращі світові альбоми</h2>
                     <div className="row">
-
                         {albums.slice(0, 4).map((album, index) => (
                             <Link key={index} to={`/album/${album.id}`} className="item">
                                 <div className="image-container">
@@ -229,4 +221,3 @@ const Main = () => {
 };
 
 export default Main;
-
