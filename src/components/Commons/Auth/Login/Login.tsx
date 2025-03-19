@@ -56,7 +56,7 @@ const Login = () => {
             </div>
 
             <div className="w-1/2 flex flex-col justify-center items-center p-8">
-                <h2 className="text-3xl font-bold mb-[48px]">Увійти</h2>
+                <h2 className="text-3xl font-bold mb-[48px] mr-[100px]">Увійти</h2>
                 <div className="w-full max-w-md">
                     <form className="w-full" onSubmit={(e) => e.preventDefault()}>
                         <div className="mb-4">
@@ -138,9 +138,9 @@ const Login = () => {
                     </form>
 
 
-                    <div className="flex flex-col items-start gap-8 self-stretch mb-[40px]">
+                    {/* <div className="flex flex-col items-start gap-8 self-stretch mb-[40px]">
                         <button
-                            className="flex p-4 flex-row items-center gap-4 w-[400px] rounded-[20px] border border-[#B3B3B3]"
+                            className="flex p-4 flex-row items-center gap-4 w-[400px] rounded-[20px] border border-[#B3B3B3] hover:border-white"
                             type="button"
                         >
                             <img src="/images/googleLogo.svg" alt="Google" className="w-6 h-6" />
@@ -150,7 +150,7 @@ const Login = () => {
                         </button>
 
                         <button
-                            className="flex p-4 flex-row items-center gap-4 w-[400px] rounded-[20px] border border-[#B3B3B3] hover:text-white"
+                            className="flex p-4 flex-row items-center gap-4 w-[400px] rounded-[20px] border border-[#B3B3B3] hover:text-white hover:border-white"
                             type="button"
                         >
                             <img src="/images/facebookLogo.svg" alt="Facebook" className="w-6 h-6" />
@@ -160,7 +160,7 @@ const Login = () => {
                         </button>
 
                         <button
-                            className="flex p-4 flex-row items-center gap-4 w-[400px] rounded-[20px] border border-[#B3B3B3] hover:text-white"
+                            className="flex p-4 flex-row items-center gap-4 w-[400px] rounded-[20px] border border-[#B3B3B3] hover:text-white hover:border-white"
                             type="button"
                         >
                             <img src="/images/AppleLogo.svg" alt="Apple" className="w-6 h-6" />
@@ -168,7 +168,7 @@ const Login = () => {
                                 Продовжити через Apple
                             </span>
                         </button>
-                    </div>
+                    </div> */}
 
                     <div className="">
                         <span className="text-[#B3B3B3] font-['Noto_Sans'] text-[16px] font-normal leading-normal">

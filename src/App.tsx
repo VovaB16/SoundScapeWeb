@@ -28,7 +28,11 @@ import Search from './components/Views/SearchPage/search';
 import NotFoundPage from './components/Views/NotFoundPage';
 import NotificationPage from './components/Views/NotificationPage/Notification';
 import AlbumPage from './components/Views/albumPage/album';
+import GoogleSuccess from './components/Commons/Auth/GoogleSucces';
+import Setting from './components/Views/SettingPage/Setting';
+
 //import Layout from './components/Layout';
+
 
 
 const AppContent = () => {
@@ -80,6 +84,8 @@ const AppContent = () => {
                 <Route path="/all-songs" element={<AllSongs />} />
                 <Route path="/album/:id" element={<AlbumPage />} />
                 <Route path="/notifications" element={<NotificationPage />} />
+                <Route path="/google-success" element={<GoogleSuccess />} />
+                <Route path="/settings" element={<Setting />} />
                 <Route path="/logout" element={<Logout />} />
               </>
             ) : (

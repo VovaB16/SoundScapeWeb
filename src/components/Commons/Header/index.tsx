@@ -1,18 +1,22 @@
 import { useEffect, useState } from 'react'; 
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import NavigationMenu from './NavigationMenu';
 import { useAuth } from '../../context/AuthContext';
 
 const Header = () => {
+
+  const [, setIsHomeActive] = useState(false);
+  const [, setIsNotificationsActive] = useState(false);
+  
   const [searchQuery, setSearchQuery] = useState("");
-  const [isHomeActive, setIsHomeActive] = useState(false);
-  const [isNotificationsActive, setIsNotificationsActive] = useState(false);
+
   const [avatarUrl, setAvatarUrl] = useState<string>('/images/avatars/frame (1).svg');
   const [homeIconSrc, setHomeIconSrc] = useState<string>('/images/HomeIcon.svg');
   const [notificationIconSrc, setNotificationIconSrc] = useState<string>('/images/notificationIcon.svg');
   const navigate = useNavigate();
   const authContext = useAuth();
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const location = useLocation();
 
   const updateAvatarUrl = (url: string) => {
     setAvatarUrl(`${BASE_URL}${url}?t=${new Date().getTime()}`);
@@ -49,24 +53,33 @@ const Header = () => {
     }
   }, [authContext, BASE_URL]);
 
+
+  useEffect(() => {
+    if (location.pathname !== "/main") {
+      setIsHomeActive(false);
+      setHomeIconSrc("/images/HomeIcon.svg");
+    }
+  }, [location.pathname]);
+
   const handleHomeClick = () => {
-    setHomeIconSrc('/images/HomeIcon2.svg');
-    setTimeout(() => {
-      setHomeIconSrc('/images/HomeIcon.svg');
-    }, 200);
-    setIsHomeActive(!isHomeActive);
-    navigate('/main');
+    setIsHomeActive(true);
+    setHomeIconSrc("/images/HomeIcon2.svg");
+    navigate("/main");
   };
+
+  useEffect(() => {
+    if (location.pathname === "/notifications") {
+      setIsNotificationsActive(true);
+      setNotificationIconSrc("/images/notificationIconActive.svg");
+    } else {
+      setIsNotificationsActive(false);
+      setNotificationIconSrc("/images/notificationIcon.svg");
+    }
+  }, [location.pathname]);
 
   const handleNotificationsClick = () => {
-    setNotificationIconSrc('/images/notificationIconActive.svg');
-    setTimeout(() => {
-      setNotificationIconSrc('/images/notificationIcon.svg');
-    }, 200);
-    setIsNotificationsActive(!isNotificationsActive);
-    navigate('/notifications');
+    navigate("/notifications");
   };
-
   const handleProfileClick = () => {
     navigate('/profile');
   };
@@ -76,6 +89,7 @@ const Header = () => {
     if (!searchQuery.trim()) return; // Не отправляем пустой запрос
     navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
   };
+
 
   return (
     <>

@@ -1,6 +1,7 @@
 import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { RegistrationContext } from '../../../context/RegistrationContext';
+import "./RegisteStep.css";
 
 const RegisterStep3 = () => {
   const navigate = useNavigate();
@@ -18,12 +19,13 @@ const RegisterStep3 = () => {
   const [dayValid, setDayValid] = useState(true);
   const [yearValid, setYearValid] = useState(true);
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const [hovered, setHovered] = useState(false);
 
   const handleRegisterClick = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!agree) {
-        alert('Ви повинні погодитися з умовами');
-        return;
+      alert('Ви повинні погодитися з умовами');
+      return;
     }
 
     const dayInt = parseInt(day.toString());
@@ -38,51 +40,51 @@ const RegisterStep3 = () => {
     setYearValid(isYearValid);
 
     if (!isDayValid || !isMonthValid || !isYearValid) {
-        return;
+      return;
     }
 
     const userData = {
-        Username: name,
-        Email: registrationData.email,
-        Password: registrationData.password,
-        BirthDay: dayInt,
-        BirthMonth: monthInt,
-        BirthYear: yearInt,
-        Gender: gender,
-        AvatarUrl: '/images/default-avatar.png'
+      Username: name,
+      Email: registrationData.email,
+      Password: registrationData.password,
+      BirthDay: dayInt,
+      BirthMonth: monthInt,
+      BirthYear: yearInt,
+      Gender: gender,
+      AvatarUrl: '/images/default-avatar.png'
     };
 
     console.log('Request Payload:', userData);
 
     try {
-        const response = await fetch(`${BASE_URL}/api/auth/register`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userData),
-        });
+      const response = await fetch(`${BASE_URL}/api/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
 
-        if (response.ok) {
-            const data = await response.json();
-            console.log('Registration successful:', data);
-            navigate('/login');
-        } else {
-            const errorText = await response.text();
-            console.log('Failed to register user:', errorText);
-            navigate('/login');
-        }
-    } catch (error) {
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Registration successful:', data);
         navigate('/login');
-        console.error('Error:', error);
-        if (error instanceof Error) {
-            navigate('/login');
-            //alert(`Error: ${error.message}`);
-        } else {
-            alert('An unknown error occurred');
-        }
+      } else {
+        const errorText = await response.text();
+        console.log('Failed to register user:', errorText);
+        navigate('/login');
+      }
+    } catch (error) {
+      navigate('/login');
+      console.error('Error:', error);
+      if (error instanceof Error) {
+        navigate('/login');
+        //alert(`Error: ${error.message}`);
+      } else {
+        alert('An unknown error occurred');
+      }
     }
-};
+  };
 
   return (
     <div className="flex h-screen">
@@ -95,16 +97,26 @@ const RegisterStep3 = () => {
       </div>
 
       <div className="w-1/2 flex flex-col justify-center items-center p-8">
-        <h2 className="text-3xl font-bold mb-[48px]">Розкажіть про себе</h2>
+        <h2 className="text-3xl font-bold mb-[48px] mr-[100px]">Розкажіть про себе</h2>
         <div className="w-full max-w-md">
           <div className="mb-4">
             <div className="w-[400px] h-[2px] flex-shrink-0 rounded-[10px] bg-[#D9D9D9]">
               <div className="h-full w-3/3 rounded-[10px] bg-[#A305A6]"></div>
             </div>
             <div className="flex items-center mb-4">
-              <Link to="/register-step2" className="mr-4">
-                <img src="/images/arrowIcon.svg" alt="Back" />
+              <Link
+                to="/register-step2"
+                className="mr-4"
+                onMouseEnter={() => setHovered(true)}
+                onMouseLeave={() => setHovered(false)}
+              >
+                <img
+                  src={hovered ? "/images/Arrow2.svg" : "/images/arrowIcon.svg"}
+                  alt="Back"
+                  className={`arrow-icon ${hovered ? 'flipped' : ''}`}
+                />
               </Link>
+
               <span className="text-[#B3B3B3] font-['Noto_Sans'] text-[16px] font-normal leading-normal">
                 Крок 3 з 3
               </span>
@@ -126,17 +138,19 @@ const RegisterStep3 = () => {
               </div>
             </div>
 
-            <div className="flex gap-4 mb-4">
-              <div className="flex-1">
-                <label className="text-white font-['Noto_Sans'] text-[16px] font-bold mb-2" htmlFor="day">День</label>
-                <input
-                  type="number"
-                  id="day"
-                  className={`w-full p-3 rounded-[8px] border ${dayValid ? 'border-[#B3B3B3]' : 'border-[#EC0D0D]'} focus-within:ring-2 focus-within:ring-[#A305A6]`}
-                  placeholder="ДД"
-                  value={day}
-                  onChange={(e) => setDay(e.target.value)}
-                />
+            <div className="flex gap-4 mb-4 w-[400px]">
+              <div className='w-[70px]'>
+                <div className="flex-1">
+                  <label className="text-white font-['Noto_Sans'] text-[16px] font-bold mb-2 w-[55px]" htmlFor="day">День</label>
+                  <input
+                    type="number"
+                    id="day"
+                    className={`w-full p-3 rounded-[8px] border ${dayValid ? 'border-[#B3B3B3]' : 'border-[#EC0D0D]'} focus-within:ring-2 focus-within:ring-[#A305A6]`}
+                    placeholder="ДД"
+                    value={day}
+                    onChange={(e) => setDay(e.target.value)}
+                  />
+                </div>
               </div>
               <div className="flex-1">
                 <label
@@ -152,6 +166,7 @@ const RegisterStep3 = () => {
                   value={month}
                   onChange={(e) => setMonth(e.target.value)}
                 >
+                  <option className="text-black bg-white" value="00">Оберіть місяць</option>
                   <option className="text-black bg-white" value="01">Січень</option>
                   <option className="text-black bg-white" value="02">Лютий</option>
                   <option className="text-black bg-white" value="03">Березень</option>
@@ -176,12 +191,12 @@ const RegisterStep3 = () => {
                 </style>
               </div>
               <div className="flex-1">
-                <label className="text-white font-['Noto_Sans'] text-[16px] font-bold mb-2" htmlFor="year">Рік</label>
+                <label className="text-white font-['Noto_Sans'] text-[16px] font-bold mb-2 w-[71px]" htmlFor="year">Рік</label>
                 <input
                   type="number"
                   id="year"
                   className={`w-full p-3 rounded-[8px] border ${yearValid ? 'border-[#B3B3B3]' : 'border-[#EC0D0D]'} focus-within:ring-2 focus-within:ring-[#A305A6]`}
-                  placeholder="YYYY"
+                  placeholder="РРРР"
                   value={year}
                   onChange={(e) => setYear(e.target.value)}
                 />
@@ -193,7 +208,7 @@ const RegisterStep3 = () => {
               <div className="flex gap-4">
                 <div className="flex items-center">
                   <input type="radio" id="male" name="gender" className="mr-2" value="Male" checked={gender === 'Male'} onChange={(e) => setGender(e.target.value)} />
-                  <label htmlFor="male" className="text-white font-['Noto_Sans'] text-[16px] ">Чоловік</label>
+                  <label htmlFor="male" className="text-white font-['Noto_Sans'] text-[16px]">Чоловік</label>
                 </div>
                 <div className="flex items-center">
                   <input type="radio" id="female" name="gender" className="mr-2" value="Female" checked={gender === 'Female'} onChange={(e) => setGender(e.target.value)} />
@@ -213,7 +228,6 @@ const RegisterStep3 = () => {
                 <label htmlFor="dontWant" className="text-white font-['Noto_Sans'] text-[16px]">Не хочу вказувати</label>
               </div>
             </div>
-
             <div className="flex items-center mb-4">
               <input
                 type="checkbox"
@@ -226,7 +240,6 @@ const RegisterStep3 = () => {
                 Я погоджуюсь з умовами
               </label>
             </div>
-
             <button
               type="submit"
               className="w-full py-3 rounded-[8px] text-white font-bold text-[16px] mt-6  bg-[rgba(163,5,166,0.50)] font-['Noto_Sans'] leading-normal hover:bg-[rgba(163,5,166,0.7)]"

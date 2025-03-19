@@ -223,7 +223,7 @@
     line-height: normal;
 }
 
-.recommended-albums {
+.recommended-albums-playlist {
     display: flex;
     flex-direction: column;
 }

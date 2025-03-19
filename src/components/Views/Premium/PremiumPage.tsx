@@ -111,7 +111,7 @@ const Premium: React.FC = () => {
                     <p className="card-info">Для двох користувачів, які проживають за однією адресою. Діють Умови.</p>
                 </div>
                 <div className="card fatily">
-                    <h3 className="card-title">Fatily</h3>
+                    <h3 className="card-title">Family</h3>
                     <p className="card-price-month"><strong>7.99 USD на місяць</strong></p>
                     <div className="line-container">
                         <div className="line"></div>

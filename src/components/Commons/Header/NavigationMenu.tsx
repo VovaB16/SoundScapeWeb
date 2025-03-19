@@ -1,11 +1,26 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const NavigationMenu = () => {
   const [activeButtons, setActiveButtons] = useState<string[]>([]);
   const [favoriteIconSrc, setFavoriteIconSrc] = useState<string>('/images/favoritesIcon.svg');
-  const [LibraryIconSrc, setLibraryIconSrc] = useState<string>('/images/libraryIcon.svg');
+  const [libraryIconSrc, setLibraryIconSrc] = useState<string>('/images/libraryIcon.svg');
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === '/favourite') {
+      setFavoriteIconSrc('/images/favoriteIcon2.svg');
+    } else {
+      setFavoriteIconSrc('/images/favoritesIcon.svg');
+    }
+
+    if (location.pathname === '/library') {
+      setLibraryIconSrc('/images/libraryIcon2.svg');
+    } else {
+      setLibraryIconSrc('/images/libraryIcon.svg');
+    }
+  }, [location.pathname]);
 
   const handleButtonClick = (buttonName: string) => {
     setActiveButtons(prevState =>
@@ -16,20 +31,10 @@ const NavigationMenu = () => {
   };
 
   const handleFavoritesClick = () => {
-    setFavoriteIconSrc('/images/favoriteIcon2.svg');
-    setTimeout(() => {
-      setFavoriteIconSrc('/images/favoritesIcon.svg');
-    }, 200); 
-    handleButtonClick('favorites');
     navigate('/favourite');
   };
 
   const handleLibraryClick = () => {
-    setLibraryIconSrc('/images/libraryIcon2.svg');
-    setTimeout(() => {
-      setLibraryIconSrc('/images/libraryIcon.svg');
-    }, 200); 
-    handleButtonClick('library');
     navigate('/library');
   };
 
@@ -39,7 +44,7 @@ const NavigationMenu = () => {
         <div className="flex items-center gap-4">
           <button className="flex items-center" onClick={handleLibraryClick}>
             <img
-              src={LibraryIconSrc}
+              src={libraryIconSrc}
               alt="My Library"
               className="h-8 w-8"
             />
@@ -56,25 +61,22 @@ const NavigationMenu = () => {
         </div>
         <div className="flex items-center gap-4">
           <button
-            className={`flex items-center w-[80px] p-2 justify-center gap-2 rounded-[20px] ${
-              activeButtons.includes('all') ? 'bg-[#660273]' : 'bg-[rgba(102,2,115,0.25)]'
-            } text-white`}
+            className={`flex items-center w-[80px] p-2 justify-center gap-2 rounded-[20px] ${activeButtons.includes('all') ? 'bg-[#660273]' : 'bg-[rgba(102,2,115,0.25)]'
+              } text-white`}
             onClick={() => handleButtonClick('all')}
           >
             Усе
           </button>
           <button
-            className={`flex items-center w-[80px] p-2 justify-center gap-2 rounded-[20px] ${
-              activeButtons.includes('music') ? 'bg-[#660273]' : 'bg-[rgba(102,2,115,0.25)]'
-            } text-white`}
-            onClick={() => handleButtonClick('music')}
+            className={`flex items-center w-[80px] p-2 justify-center gap-2 rounded-[20px] ${location.pathname === '/all-songs' ? 'bg-[#660273]' : 'bg-[rgba(102,2,115,0.25)]'
+              } text-white`}
+            onClick={() => navigate('/all-songs')}
           >
             Музика
           </button>
           <button
-            className={`flex items-center w-[80px] p-2 justify-center gap-2 rounded-[20px] ${
-              activeButtons.includes('podcasts') ? 'bg-[#660273]' : 'bg-[rgba(102,2,115,0.25)]'
-            } text-white`}
+            className={`flex items-center w-[80px] p-2 justify-center gap-2 rounded-[20px] ${activeButtons.includes('podcasts') ? 'bg-[#660273]' : 'bg-[rgba(102,2,115,0.25)]'
+              } text-white`}
             onClick={() => handleButtonClick('podcasts')}
           >
             Подкасти

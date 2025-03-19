@@ -9,6 +9,10 @@ interface AuthContextType {
   setToken: (token: string) => void;
   refreshAuthToken: () => Promise<void>;
   userId: string | null;
+  user: {
+    emailConfirmed: boolean;
+    token: string;
+};
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -91,7 +95,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ loggedIn, login, logout, token, refreshToken, setToken, refreshAuthToken, userId: null }}>
+    <AuthContext.Provider value={{ loggedIn, login, logout, token, refreshToken, setToken, refreshAuthToken, userId: null, user: { emailConfirmed: false, token: token || '' } }}>
       {children}
     </AuthContext.Provider>
   );

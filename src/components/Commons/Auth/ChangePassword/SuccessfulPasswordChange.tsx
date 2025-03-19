@@ -4,7 +4,7 @@ const SuccessfulPasswordChange = () => {
     const navigate = useNavigate();
 
     const handleButtonClick = () => {
-        navigate('/main');
+        navigate('/login');
     };
 
     return (
