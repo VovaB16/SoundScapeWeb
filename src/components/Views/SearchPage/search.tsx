@@ -12,11 +12,10 @@ interface SearchResult {
   audio: string;
 }
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const SearchPage: React.FC = () => {
   const [searchHistory, setSearchHistory] = useState<SearchResult[]>([]);
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [searchResults] = useState<SearchResult[]>([]);
   
   useEffect(() => {
     const storedHistory = localStorage.getItem("searchHistory");
@@ -25,24 +24,6 @@ const SearchPage: React.FC = () => {
     }
   }, []);
 
-  const handleSearch = async (query: string) => {
-   if (!query.trim()) return;
-
-   try {
-       const response = await fetch(`${BASE_URL}/api/search?q=${query}`);
-       if (!response.ok) throw new Error("error on searhing tracks");
-
-       const data = await response.json();
-       setSearchResults(data.results || []);
-
-       // Обновляем историю поиска
-       const updatedHistory = [data.results[0], ...searchHistory].slice(0, 5);
-       setSearchHistory(updatedHistory);
-       localStorage.setItem("searchHistory", JSON.stringify(updatedHistory));
-   } catch (error) {
-       console.error("Search error:", error);
-   }
-};
 
   return (
     <div className="container">
