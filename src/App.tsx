@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
-import { AuthProvider } from './components/context/AuthContext';
+import { useContext, useEffect } from 'react';
+import { AuthContext, AuthProvider } from './components/context/AuthContext';
 import Artist from './components/Views/ArtistPage/Artist';
 import Header from './components/Commons/Header/index';
 import HeaderGuest from './components/Commons/Header/HeaderGuest';
@@ -37,7 +37,8 @@ import Setting from './components/Views/SettingPage/Setting';
 
 const AppContent = () => {
   
-  const loggedIn = true;
+  const authContext = useContext(AuthContext);
+  const loggedIn = authContext?.loggedIn ?? false;
   const location = useLocation();
 
   useEffect(() => {
