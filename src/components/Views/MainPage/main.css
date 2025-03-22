@@ -430,3 +430,38 @@ ul li::before {
     white-space: nowrap; 
 }
 
+
+
+.block_popular-artists .container {
+    display: flex;
+    align-items: center;
+    position: relative; 
+  }
+  
+  .block_popular-artists .control_item {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .block_popular-artists .control_item:first-child {
+    left: 10px; 
+  }
+  
+  .block_popular-artists .control_item:last-child {
+    right: 10px; 
+  }
+  
+ 
+  .block_popular-artists .item {
+    text-align: center;
+  }
+  
+  .block_popular-artists img {
+    max-width: 100%;
+    height: auto;
+  }
+  

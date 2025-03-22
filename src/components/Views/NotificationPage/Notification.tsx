@@ -66,7 +66,7 @@ const NotificationPage: React.FC = () => {
             <div className="flex justify-center items-start center-text-notification">
                 <div className="text-center">
                     {isEmailConfirmed ? (
-                        <div className="main-container">
+                        <div className="main-container-notification-email">
                             <div className='line-email'>
                             <h1 className="main-center-text-notification-email">
                                 

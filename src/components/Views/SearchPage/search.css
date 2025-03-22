@@ -22,7 +22,7 @@ margin-bottom: 64px;
    flex-direction: column;
    gap: 24px;
 }
-.item{
+.item-search {
    display: flex;
    align-items: center;
    justify-content: space-between;

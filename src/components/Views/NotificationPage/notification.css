@@ -28,7 +28,7 @@
 }
 
 
-.main-container {
+.main-container-notification-email {
     display: flex;
     width: 1320px;
     padding-right: 16px;
@@ -37,6 +37,7 @@
     border-radius: 2px 20px 20px 2px;
     
     background: linear-gradient(to right, rgba(163, 5, 166, 0.5), rgba(103, 56, 111, 1), rgba(31, 18, 38, 1));
+
 }
 
 .main-center-text-notification-email {
