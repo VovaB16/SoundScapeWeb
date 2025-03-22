@@ -30,6 +30,8 @@ import NotificationPage from './components/Views/NotificationPage/Notification';
 import AlbumPage from './components/Views/albumPage/album';
 import GoogleSuccess from './components/Commons/Auth/GoogleSucces';
 import Setting from './components/Views/SettingPage/Setting';
+import CreateTrackPage from './components/Views/AdminPages/createTrackPage/createTrackPage';
+import CreateUserPage from './components/Views/AdminPages/createUserPage/createUserPage';
 
 //import Layout from './components/Layout';
 
@@ -87,6 +89,8 @@ const AppContent = () => {
                 <Route path="/notifications" element={<NotificationPage />} />
                 <Route path="/google-success" element={<GoogleSuccess />} />
                 <Route path="/settings" element={<Setting />} />
+                <Route path="/admin-create-track" element={<CreateTrackPage />} />
+                <Route path="/admin-create-user" element={<CreateUserPage />} />
                 <Route path="/logout" element={<Logout />} />
               </>
             ) : (
