@@ -1,0 +1,55 @@
+.create-track-page-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    height: 100vh;
+}
+
+.create-track-page-form {
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.create-track-page-form div {
+    margin-bottom: 15px;
+}
+
+.create-track-page-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.create-track-page-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.create-track-page-button {
+    display: flex;
+    padding: 16px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: 1px solid var(--Accented, #2D0140);
+    color: #FFF;
+    font-family: "Noto Sans";
+    font-size: 16px;
+    font-weight: 400;
+    line-height: normal;
+    cursor: pointer;
+    transition: background 0.3s;
+    width: 300px;
+    margin-left: 10px;
+}
+
+.create-track-page-button:hover {
+    background: rgba(45, 1, 64, 0.5);
+}
+
+.create-track-page-input.invalid {
+    border-color: red;
+}

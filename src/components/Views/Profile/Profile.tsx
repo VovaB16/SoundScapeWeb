@@ -29,6 +29,21 @@ const Profile: React.FC<ProfileProps> = ({ }) => {
     const [isEmailConfirmed, setIsEmailConfirmed] = useState<boolean>(false);
     const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+    interface UserData {
+        role: string;
+        username: string;
+        email: string;
+        avatarUrl: string;
+        accountCreationDate: string;
+        birthDay: string;
+        birthMonth: string;
+        birthYear: string;
+        gender: string;
+        emailConfirmed: boolean;
+    }
+
+    const [userData, setUserData] = useState<UserData | null>(null);
+
     const fetchUserData = async () => {
         try {
             const response = await fetch(`${BASE_URL}/api/user/me`, {
@@ -40,6 +55,7 @@ const Profile: React.FC<ProfileProps> = ({ }) => {
             });
             if (response.ok) {
                 const data = await response.json();
+                setUserData(data);
                 setUserName(data.username);
                 setEmail(data.email);
                 setAvatarUrl(`${BASE_URL}${data.avatarUrl}?t=${new Date().getTime()}`);
@@ -57,7 +73,6 @@ const Profile: React.FC<ProfileProps> = ({ }) => {
             setShowForm(true);
         }
     };
-
 
     const fetchUserPlaylists = async () => {
         try {
@@ -183,6 +198,7 @@ const Profile: React.FC<ProfileProps> = ({ }) => {
     const handleSettingClick = () => {
         navigate('/settings');
     };
+
     const handleSendConfirmationEmail = async () => {
         try {
             const response = await fetch(`${BASE_URL}/api/auth/request-email-confirmation`, {
@@ -312,66 +328,71 @@ const Profile: React.FC<ProfileProps> = ({ }) => {
                 <button className="btnProfile btn-edit" onClick={handleEditClick}>Редагувати профіль</button>
                 <button className="btnProfile btn-settings" onClick={handleSettingClick}>Налаштування</button>
                 <button onClick={handleLogout} className="btnProfile btn-logout">Вийти</button>
+                {userData && userData.role === "Admin" && (
+                    <>
+                        <button className="btnEdit" onClick={() => navigate("/admin-create-track")}>Створити трек</button>
+                        <button className="btnEdit" onClick={() => navigate("/admin-create-user")}>Створити користувача</button>
+                    </>
+                )}
             </div>
 
             <div className="profile-lists-container">
-    <div className="list-header">
-        <h3>Підписки</h3>
-    </div>
-    {subscriptionsCount === 0 ? (
-        <p>У вас немає підписок</p>
-    ) : (
-        <ul>
-            {subscriptions.slice(0, 5).map((subscription) => (
-                <li
-                    key={subscription.id}
-                    onClick={() => navigate(`/artist/${subscription.id}`)}
-                    className="clickable-item"
-                >
-                    <div className="playlist-item-profile">
-                        <div>
-                            <img
-                                src={getFullImageUrl(subscription.imageUrl)}
-                                alt="Subscription Avatar"
-                                className="subscription-avatar"
-                            />
-                        </div>
-                        <p className="subscription-name">{subscription.name}</p>
-                    </div>
-                </li>
-            ))}
-        </ul>
-    )}
+                <div className="list-header">
+                    <h3>Підписки</h3>
+                </div>
+                {subscriptionsCount === 0 ? (
+                    <p>У вас немає підписок</p>
+                ) : (
+                    <ul>
+                        {subscriptions.slice(0, 5).map((subscription) => (
+                            <li
+                                key={subscription.id}
+                                onClick={() => navigate(`/artist/${subscription.id}`)}
+                                className="clickable-item"
+                            >
+                                <div className="playlist-item-profile">
+                                    <div>
+                                        <img
+                                            src={getFullImageUrl(subscription.imageUrl)}
+                                            alt="Subscription Avatar"
+                                            className="subscription-avatar"
+                                        />
+                                    </div>
+                                    <p className="subscription-name">{subscription.name}</p>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                )}
 
-    <div className="list-header">
-        <h3>Плейлисти</h3>
-    </div>
-    {playlists.length === 0 ? (
-        <p>У вас немає плейлистів</p>
-    ) : (
-        <ul>
-            {playlists.slice(0, 5).map((playlist) => (
-                <li key={playlist.id}>
-                    <div className="playlist-item-profile">
-                        <div className="playlist-avatar-container">
-                            <img
-                                src={playlist.imageUrl || '/images/profilePage/playlistAvatar.svg'}
-                                alt="Playlist Avatar"
-                                className="playlist-avatar"
-                                onError={(e) => {
-                                    console.error('Failed to load image:', e.currentTarget.src);
-                                    e.currentTarget.src = '/images/profilePage/playlistAvatar.svg';
-                                }}
-                            />
-                        </div>
-                        <p className="playlist-name">{playlist.name}</p>
-                    </div>
-                </li>
-            ))}
-        </ul>
-    )}
-</div>
-
+                <div className="list-header">
+                    <h3>Плейлисти</h3>
+                </div>
+                {playlists.length === 0 ? (
+                    <p>У вас немає плейлистів</p>
+                ) : (
+                    <ul>
+                        {playlists.slice(0, 5).map((playlist) => (
+                            <li key={playlist.id}>
+                                <div className="playlist-item-profile">
+                                    <div className="playlist-avatar-container">
+                                        <img
+                                            src={playlist.imageUrl || '/images/profilePage/playlistAvatar.svg'}
+                                            alt="Playlist Avatar"
+                                            className="playlist-avatar"
+                                            onError={(e) => {
+                                                console.error('Failed to load image:', e.currentTarget.src);
+                                                e.currentTarget.src = '/images/profilePage/playlistAvatar.svg';
+                                            }}
+                                        />
+                                    </div>
+                                    <p className="playlist-name">{playlist.name}</p>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
         </div>
     );
 };

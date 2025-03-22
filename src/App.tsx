@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
-import { AuthProvider } from './components/context/AuthContext';
+import { useContext, useEffect } from 'react';
+import { AuthContext, AuthProvider } from './components/context/AuthContext';
 import Artist from './components/Views/ArtistPage/Artist';
 import Header from './components/Commons/Header/index';
 import HeaderGuest from './components/Commons/Header/HeaderGuest';
@@ -30,6 +30,8 @@ import NotificationPage from './components/Views/NotificationPage/Notification';
 import AlbumPage from './components/Views/albumPage/album';
 import GoogleSuccess from './components/Commons/Auth/GoogleSucces';
 import Setting from './components/Views/SettingPage/Setting';
+import CreateTrackPage from './components/Views/AdminPages/createTrackPage/createTrackPage';
+import CreateUserPage from './components/Views/AdminPages/createUserPage/createUserPage';
 
 //import Layout from './components/Layout';
 
@@ -37,7 +39,8 @@ import Setting from './components/Views/SettingPage/Setting';
 
 const AppContent = () => {
   
-  const loggedIn = true;
+  const authContext = useContext(AuthContext);
+  const loggedIn = authContext?.loggedIn ?? false;
   const location = useLocation();
 
   useEffect(() => {
@@ -86,6 +89,8 @@ const AppContent = () => {
                 <Route path="/notifications" element={<NotificationPage />} />
                 <Route path="/google-success" element={<GoogleSuccess />} />
                 <Route path="/settings" element={<Setting />} />
+                <Route path="/admin-create-track" element={<CreateTrackPage />} />
+                <Route path="/admin-create-user" element={<CreateUserPage />} />
                 <Route path="/logout" element={<Logout />} />
               </>
             ) : (
