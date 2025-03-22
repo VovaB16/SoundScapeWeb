@@ -61,9 +61,9 @@ const NavigationMenu = () => {
         </div>
         <div className="flex items-center gap-4">
           <button
-            className={`flex items-center w-[80px] p-2 justify-center gap-2 rounded-[20px] ${activeButtons.includes('all') ? 'bg-[#660273]' : 'bg-[rgba(102,2,115,0.25)]'
+            className={`flex items-center w-[80px] p-2 justify-center gap-2 rounded-[20px] ${location.pathname === '/main' ? 'bg-[#660273]' : 'bg-[rgba(102,2,115,0.25)]'
               } text-white`}
-            onClick={() => handleButtonClick('all')}
+              onClick={() => navigate('/main')}
           >
             Усе
           </button>

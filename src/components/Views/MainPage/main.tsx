@@ -31,7 +31,7 @@ interface Album {
 const Main = () => {
     const navigate = useNavigate();
     const [topSongs, setTopSongs] = useState<Song[]>([]);
-    const [durations, setDurations] = useState<{ [key: number]: string }>({});
+    const [durations] = useState<{ [key: number]: string }>({});
     const [favorites, setFavorites] = useState<number[]>([]);
     const [favoritesLoaded, setFavoritesLoaded] = useState(false); // New state variable
     const [, setArtists] = useState<Artist[]>([]);

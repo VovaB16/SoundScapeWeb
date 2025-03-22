@@ -222,8 +222,7 @@ const TrackPlayer: React.FC<TrackPlayerProps> = ({
       </div>
 
       <div className="volume-control">
-        <img src="/images/microphone.svg" alt="Left Icon 1" className="volume-icon" />
-        <img src="/images/listPlayer.svg" alt="Left Icon 2" className="volume-icon" />
+
         <img src="/images/volume-icon.svg" alt="Volume" className="volume-icon" />
         <div className="progress-bar-volume" style={{ position: 'relative' }}>
           <div
@@ -250,8 +249,7 @@ const TrackPlayer: React.FC<TrackPlayerProps> = ({
           />
         </div>
 
-        <img src="/images/sizePlayerContainer.svg" alt="Right Icon 1" className="volume-icon" />
-        <img src="/images/sizePlayer.svg" alt="Right Icon 2" className="volume-icon" />
+        
       </div>
     </div>
   );
