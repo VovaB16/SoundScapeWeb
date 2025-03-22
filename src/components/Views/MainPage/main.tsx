@@ -31,9 +31,9 @@ interface Album {
 const Main = () => {
     const navigate = useNavigate();
     const [topSongs, setTopSongs] = useState<Song[]>([]);
-    const [durations] = useState<{ [key: number]: string }>({});
+    const [durations, setDurations] = useState<{ [key: number]: string }>({});
     const [favorites, setFavorites] = useState<number[]>([]);
-    const [favoritesLoaded, setFavoritesLoaded] = useState(false); // New state variable
+    const [favoritesLoaded, setFavoritesLoaded] = useState(false);
     const [, setArtists] = useState<Artist[]>([]);
     const [visibleArtists, setVisibleArtists] = useState<Artist[]>([]);
     const [albums, setAlbums] = useState<Album[]>([]);
@@ -55,6 +55,14 @@ const Main = () => {
                 }));
         
                 setTopSongs(updatedSongs);
+                updatedSongs.forEach((song: { filePath: any; id: any; }) => {
+                    const audio = new Audio(`${BASE_URL}${song.filePath}`);
+                    audio.addEventListener('loadedmetadata', () => {
+                        const minutes = Math.floor(audio.duration / 60);
+                        const seconds = Math.floor(audio.duration % 60).toString().padStart(2, '0');
+                        setDurations(prev => ({ ...prev, [song.id]: `${minutes}:${seconds}` }));
+                    });
+                });
             } catch (error) {
                 console.error('Error fetching top songs:', error);
             }
@@ -166,8 +174,42 @@ const Main = () => {
         <div className="main">
             <div className="container">
                 <div className="block_day-recomendation">
-                    <h1>Arctic Monkeys</h1>
-                    <p>Рекомендація дня: I Wanna Be Yours</p>
+                <div className="content">
+                         <h1>Arctic Monkeys</h1>
+                         <div className="row">
+                             <div className="item">
+                                 <img src="images/home_page_images/music_icon.png" alt="songImage" />
+                             </div>
+                             <div className="item">
+                                 <div className="under-title">
+                                     <img src="/images/home_page_images/ellipse-8.png" alt="" />
+                                     <p>Рекомендація дня</p>
+                                 </div>
+                                 <div className="song-name">
+                                     <p className="name">I Wanna Be Yours</p>
+                                     <button type="button" className="btn" id="share">
+                                         <img src="/images/home_page_images/share_icon.png" alt="Share" />
+                                     </button>
+                                 </div>
+                                 <div className="controls">
+                                     <button type="button" className="btn" id="play">
+                                         <img src="/images/home_page_images/player_icon.png" alt="play" />
+                                     </button>
+                                     <button type="button" className="btn" id="add">
+                                         <img src="/images/home_page_images/add_icon.png" alt="add" />
+                                     </button>
+                                     <button type="button" className="btn" id="more">
+                                         <img src="/images/home_page_images/more_icon.png" alt="more" />
+                                     </button>
+                                 </div>
+                             </div>
+                             <div className="item">
+                                 <p className="artist-information">
+                                     With their nervy and literate indie rock sound, Arctic Monkeys are a respected, adventurous, and successful group that could easily be called Britain's biggest band of the early 21st century.
+                                 </p>
+                             </div>
+                         </div>
+                     </div>
                 </div>
                 <div className="block_popular-artists">
                     <h2 className="title">Популярні виконавці</h2>
@@ -239,7 +281,7 @@ const Main = () => {
                 </div>
 
                 <div className="block_best-world-albums">
-                    <h2>Найкращі світові альбоми</h2>
+                    <h2 className="title">Найкращі світові альбоми</h2>
                     <div className="row">
 
                         {albums.slice(0, 4).map((album, index) => (

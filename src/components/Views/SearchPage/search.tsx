@@ -31,7 +31,7 @@ const SearchPage: React.FC = () => {
         <p className="title">Результати пошуку</p>
         <div className="items">
           {searchResults.map((result) => (
-            <div className="item" key={result.id}>
+            <div className="item-search" key={result.id}>
               <div className="image">
                 <img src={result.image} alt={result.name} />
               </div>
@@ -78,7 +78,7 @@ const SearchPage: React.FC = () => {
         <p className="title">Останні пошукові запити</p>
         <div className="items">
           {searchHistory.map((historyItem) => (
-            <div className="item" key={historyItem.id}>
+            <div className="item-search" key={historyItem.id}>
               <div className="image">
                 <img src={historyItem.image} alt={historyItem.name} />
               </div>
