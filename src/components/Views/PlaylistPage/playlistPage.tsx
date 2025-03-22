@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';  
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './PlaylistPage.css';
+import './playlistPage.css';
 import TrackPlayer from '../TrackPlayer/TrackPlayer'; 
 
 interface Track {
