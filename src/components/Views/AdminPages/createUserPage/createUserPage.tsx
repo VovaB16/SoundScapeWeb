@@ -39,7 +39,7 @@ const CreateUserPage: React.FC = () => {
                 },
             });
             console.log('User created successfully:', response.data);
-            navigate('/profile'); // Redirect to profile page
+            navigate('/profile');
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 console.error('Error creating user:', error.response?.data || error.message);
