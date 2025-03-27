@@ -23,7 +23,7 @@ const SuccessfulPasswordChange = () => {
                         Готово
                     </h2>
                         <p className="mb-6 max-w-md" style={{ color: '#B3B3B3', fontFamily: 'Noto Sans', fontSize: '16px', fontStyle: 'normal', fontWeight: 400, lineHeight: 'normal' }}>
-                            Ваш пароль успішно оновлено, ви ввійшли в акаунт.
+                            Ваш пароль успішно оновлено.
                         </p>
                 </div>
                 <button

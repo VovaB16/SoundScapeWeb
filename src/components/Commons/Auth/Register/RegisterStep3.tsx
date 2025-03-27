@@ -19,7 +19,7 @@ const RegisterStep3 = () => {
   const [dayValid, setDayValid] = useState(true);
   const [yearValid, setYearValid] = useState(true);
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-  const [hovered, setHovered] = useState(false);
+  const [, setHovered] = useState(false);
 
   const handleRegisterClick = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -111,9 +111,9 @@ const RegisterStep3 = () => {
                 onMouseLeave={() => setHovered(false)}
               >
                 <img
-                  src={hovered ? "/images/Arrow2.svg" : "/images/arrowIcon.svg"}
+                  src={"/images/arrowIcon.svg"}
                   alt="Back"
-                  className={`arrow-icon ${hovered ? 'flipped' : ''}`}
+                  className={`arrow-icon`}
                 />
               </Link>
 

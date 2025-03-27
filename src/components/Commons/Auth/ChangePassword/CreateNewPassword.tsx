@@ -86,8 +86,8 @@ const CreateNewPassword = () => {
           <span className="text-white ml-4" style={{ fontFamily: 'Noto Sans', fontSize: '32px', fontWeight: 300 }}>SoundScape</span>
         </div>
       </div>
-      <div className="w-1/2 flex flex-col justify-center items-center p-8 text-left">
-        <h2 className="text-3xl font-bold mb-[48px]">Створення нового пароля</h2>
+      <div className="w-1/2 flex flex-col justify-center items-center p-8 ">
+        <h2 className="text-3xl font-bold mb-[48px] mr-[85px]">Створення нового пароля</h2>
         <p className="mb-6 max-w-md" style={{ color: '#B3B3B3', fontFamily: 'Noto Sans', fontSize: '16px', fontStyle: 'normal', fontWeight: 400, lineHeight: 'normal' }}>
           Введіть новий пароль для свого акаунта SoundScape нижче.
         </p>

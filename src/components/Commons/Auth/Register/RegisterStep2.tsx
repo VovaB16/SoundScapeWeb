@@ -14,7 +14,7 @@ const RegisterStep2 = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
-  const [hovered, setHovered] = useState(false);
+  const [, setHovered] = useState(false);
   const toggleShowPassword = () => setShowPassword(!showPassword);
   const toggleShowRepeatPassword = () => setShowRepeatPassword(!showRepeatPassword);
 
@@ -79,9 +79,9 @@ const RegisterStep2 = () => {
       onMouseLeave={() => setHovered(false)}
     >
       <img 
-        src={hovered ? "/images/Arrow2.svg" : "/images/arrowIcon.svg"} 
+        src={"/images/arrowIcon.svg"} 
         alt="Back" 
-        className={`arrow-icon ${hovered ? 'flipped' : ''}`}
+        className={`arrow-icon`}
       />
     </Link>
 
